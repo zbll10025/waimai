@@ -1,11 +1,12 @@
 import { TabBarItem,tabBarItemList } from '../models/TabBarItem'
 import { promptAction } from '@kit.ArkUI'
 import { HomePage } from './HomePage'
+import { UserPage } from '../component/UserPage/UserPage'
 
 @Entry
 @Component
 struct MainPage {
-  @State selectIndex:number = 0
+  @StorageLink('tabIndex') selectIndex:number = 0
   private  controller:TabsController = new TabsController()
   @State tabBarItemList:TabBarItem [] = tabBarItemList
   @Builder
@@ -23,7 +24,7 @@ struct MainPage {
           Text('订单')
         }.tabBar(this.tabBarBuilder(tabBarItemList[1],1))
         TabContent(){
-          Text('我的')
+          UserPage()
         }.tabBar(this.tabBarBuilder(tabBarItemList[2],2))
       }
         .onChange((index:number)=>{

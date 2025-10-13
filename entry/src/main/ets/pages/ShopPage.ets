@@ -5,6 +5,8 @@ import { ShowGoodsComp } from '../component/ShopPage/ShowGoodsComp';
 import { CartItemData } from '../models/CartItemData';
 import { KEY } from '../utils';
 import { JSON } from '@kit.ArkTS';
+import { GlobalStore } from '../models/SuggestFoodData';
+
 PersistentStorage.persistProp(KEY,'[]')
 @Entry
 @Component
@@ -17,6 +19,11 @@ export  struct ShopPage {
   @State cartItemList:CartItemData[] = JSON.parse(this.cartItemListJson)  as  CartItemData[]
   onChangeCart(){
     this.cartItemList = JSON.parse(this.cartItemListJson) as CartItemData[]
+  }
+  onAppear(callback: () => void) {
+    GlobalStore.onBuy?.();
+    callback?.();
+    return this;
   }
   build() {
     Row(){

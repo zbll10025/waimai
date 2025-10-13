@@ -1,3 +1,5 @@
+import { Category } from "./Category"
+
 export class Shop{
   id?:number
   image:ResourceStr = $r('app.media.shop1')
@@ -5,6 +7,7 @@ export class Shop{
   score:string = ""
   salesVolume:number = 0
   content:string = ""
+  categoryList?:Category[]
 }
 export const shopList:Shop[] =[
   {

@@ -9,3 +9,4 @@ export  class CartItemData{
   discount?:number =0.1
   goods?:Goods
 }
+

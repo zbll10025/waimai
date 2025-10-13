@@ -33,6 +33,6 @@ export const  DelCart = (id:number)=>{
   }
   AppStorage.set(KEY,JSON.stringify(cartItemlist))
 }
-export const  ClearCart = ()=>{
+export const   ClearCart = ()=>{
   AppStorage.set(KEY,'[]')
 }

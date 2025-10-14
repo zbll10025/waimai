@@ -1,6 +1,8 @@
 import { router } from '@kit.ArkUI'
 import { promptAction } from '@kit.ArkUI'
-
+import http from '@ohos.net.http'
+export const ID = 'userid'
+PersistentStorage.persistProp(ID,'-1')
 @Entry
 @Component
 export struct LoginPage {
@@ -8,9 +10,19 @@ export struct LoginPage {
   @State password: string = ''
   @State isPasswordVisible: boolean = false
   @State isLoading: boolean = false
+  @StorageProp(ID) userid: string = "123"
+
+  private readonly baseUrl: string = 'http://124.71.28.168:8080'
+  private readonly loginEndpoint: string = '/api/users/login'
+
+  aboutToAppear() {
+    // 页面加载时检查是否已经登录
+    this.checkAutoLogin()
+  }
 
   build() {
     Column() {
+
       // Logo and title section
       Column() {
         Image($r('app.media.address'))
@@ -176,7 +188,7 @@ export struct LoginPage {
     return this.username.trim().length > 0 && this.password.trim().length > 0
   }
 
-  private handleLogin() {
+  private async handleLogin() {
     if (!this.canLogin()) {
       promptAction.showToast({ message: '请填写完整信息' })
       return
@@ -184,21 +196,41 @@ export struct LoginPage {
 
     this.isLoading = true
 
-    // Simulate login API call
-    setTimeout(() => {
-      this.isLoading = false
+    try {
+      const httpRequest = http.createHttp()
+      
+      // 构建请求URL，使用Query参数
+      const loginUrl = `${this.baseUrl}${this.loginEndpoint}?name=${encodeURIComponent(this.username)}&password=${encodeURIComponent(this.password)}`
+      
+      const response = await httpRequest.request(loginUrl, {
+        method: http.RequestMethod.POST,
+        header: {
+          'Content-Type': 'application/json'
+        }
+      })
 
-      // Simple validation for demo
-      if (this.username === 'admin' && this.password === '123456') {
+      console.info('Login response status:', response.responseCode)
+      console.info('Login response body:', response.result)
+
+      if (response.responseCode === 200) {
+        // 登录成功
+
         promptAction.showToast({ message: '登录成功' })
-        // Navigate to MainPage
+
+        // 跳转到主页面
         router.replaceUrl({
           url: 'pages/MainPage'
         })
       } else {
+        // 登录失败
         promptAction.showToast({ message: '用户名或密码错误' })
       }
-    }, 1500)
+    } catch (error) {
+      console.error('Login error:', error)
+      promptAction.showToast({ message: '网络错误，请检查网络连接' })
+    } finally {
+      this.isLoading = false
+    }
   }
 
   private handleForgotPassword() {
@@ -212,4 +244,19 @@ export struct LoginPage {
       url: 'pages/RegisterPage'
     })
   }
+
+  private checkAutoLogin() {
+    if (this.userid === '-1') {
+      console.info('default')
+    } else {
+      // 跳转到主页
+      console.info('success')
+      router.replaceUrl({
+        url: 'pages/MainPage'
+      })
+    }
+  }
+
+
 }
+

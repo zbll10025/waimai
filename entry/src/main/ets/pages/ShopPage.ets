@@ -5,7 +5,7 @@ import { ShowGoodsComp } from '../component/ShopPage/ShowGoodsComp';
 import { CartItemData } from '../models/CartItemData';
 import { KEY } from '../utils';
 import { JSON } from '@kit.ArkTS';
-import { GlobalStore } from '../models/SuggestFoodData';
+import { GlobalStore } from '../utils/index';
 
 PersistentStorage.persistProp(KEY,'[]')
 @Entry

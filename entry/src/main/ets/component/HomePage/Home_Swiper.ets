@@ -1,7 +1,7 @@
 import { Goods } from "../../models/Goods";
-import { GlobalStore, SuggestFoodData,suggestList } from "../../models/SuggestFoodData";
+import {  SuggestFoodData,suggestList } from "../../models/SuggestFoodData";
 import { TakeAwayItem, takeAwayList} from "../../models/TakeAwayItem";
-import { AddCart } from "../../utils";
+import { AddCart, GlobalStore } from "../../utils";
 import { router } from "@kit.ArkUI";
 import { RouterPath } from "../../route/RoutePath";
 
@@ -78,7 +78,7 @@ export struct Home_Swiper{
                       router.pushUrl({url:RouterPath.ShopPage})
                     })
                   Column(){
-                    Text("虾王蒸霸asdad")
+                    Text(item.food?.name)
                       .fontSize(20)
                       .fontWeight(FontWeight.Medium)
                       .maxLines(1)

@@ -1017,9 +1017,3 @@ export  const  suggestList:SuggestFoodData[] = [
     }
   }
   ]
-
-export interface IGlobalStore {
-  onBuy?: () => void;
-}
-
-export const GlobalStore: IGlobalStore = {};

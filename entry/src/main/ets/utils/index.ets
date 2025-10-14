@@ -36,3 +36,9 @@ export const  DelCart = (id:number)=>{
 export const   ClearCart = ()=>{
   AppStorage.set(KEY,'[]')
 }
+
+export interface IGlobalStore {
+  onBuy?: () => void;
+}
+
+export const GlobalStore: IGlobalStore = {};

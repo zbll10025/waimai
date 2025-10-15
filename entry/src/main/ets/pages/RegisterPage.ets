@@ -1,66 +1,51 @@
 import { router } from '@kit.ArkUI'
 import { promptAction } from '@kit.ArkUI'
+import http from '@ohos.net.http'
 
-@Preview
+interface GeneratedObjectLiteralInterface_1 {
+  name: string;
+  password: string;
+  telePhone: string;
+}
+
+@Entry
 @Component
 export struct RegisterPage {
-  @State phone: string = ''
-  @State verificationCode: string = ''
+  @State telePhone: string = ''
+  @State name: string = ''
   @State password: string = ''
   @State confirmPassword: string = ''
   @State isPasswordVisible: boolean = false
   @State isConfirmPasswordVisible: boolean = false
   @State isLoading: boolean = false
-  @State isCodeSent: boolean = false
-  @State countdown: number = 0
-  @State agreeTerms: boolean = false
+  
+  private readonly baseUrl: string = 'http://192.168.0.128:8080'
+  private readonly registerEndpoint: string = '/api/users'
 
   build() {
     Column() {
-      // Header with back button and title
-      Row() {
-        Button() {
-          Image($r('app.media.chevron_up'))
-            .width(20)
-            .height(20)
-            .rotate({ angle: -90 })
-        }
-        .width(40)
-        .height(40)
-        .backgroundColor('transparent')
-        .onClick(() => {
-          router.back()
-        })
-
-        Text('注册账号')
-          .fontSize(20)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#333333')
-          .margin({ left: 15 })
-
-        Blank()
-      }
-      .width('100%')
-      .margin({ top: 20, bottom: 30 })
-
-      // Logo and subtitle
+      // Logo & title
       Column() {
         Image($r('app.media.address'))
-          .width(60)
-          .height(60)
-          .margin({ bottom: 15 })
+          .width(80)
+          .height(80)
+          .margin({ bottom: 20 })
 
-        Text('创建新账号')
-          .fontSize(24)
+        Text('注册账号')
+          .fontSize(28)
           .fontWeight(FontWeight.Bold)
           .fontColor('#333333')
           .margin({ bottom: 8 })
-      }
-      .margin({ bottom: 30 })
 
-      // Form
+        Text('创建你的外卖账户')
+          .fontSize(14)
+          .fontColor('#666666')
+      }
+      .margin({ top: 60, bottom: 60 })
+
+      // Form (aligned with LoginPage style)
       Column() {
-        // Phone input
+        // Phone
         TextInput({ placeholder: '请输入手机号' })
           .width('100%')
           .height(50)
@@ -69,21 +54,33 @@ export struct RegisterPage {
           .padding({ left: 20, right: 20 })
           .fontSize(16)
           .onChange((value: string) => {
-            this.phone = value
+            this.telePhone = value
           })
           .margin({ bottom: 20 })
 
-        // Password input
-        Row() {
-          TextInput({
-            placeholder: '请输入密码（至少6位）',
+        // Name
+        TextInput({ placeholder: '请输入姓名' })
+          .width('100%')
+          .height(50)
+          .backgroundColor('#F5F5F5')
+          .borderRadius(25)
+          .padding({ left: 20, right: 20 })
+          .fontSize(16)
+          .onChange((value: string) => {
+            this.name = value
           })
+          .margin({ bottom: 20 })
+
+        // Password
+        Row() {
+          TextInput({ placeholder: '请输入密码（至少6位）' })
             .layoutWeight(1)
             .height(50)
             .backgroundColor('#F5F5F5')
             .borderRadius(25)
             .padding({ left: 20, right: 20 })
             .fontSize(16)
+            .type(this.isPasswordVisible ? InputType.Normal : InputType.Password)
             .onChange((value: string) => {
               this.password = value
             })
@@ -101,17 +98,16 @@ export struct RegisterPage {
         .borderRadius(25)
         .margin({ bottom: 20 })
 
-        // Confirm password input
+        // Confirm Password
         Row() {
-          TextInput({
-            placeholder: '请确认密码',
-          })
+          TextInput({ placeholder: '请确认密码' })
             .layoutWeight(1)
             .height(50)
             .backgroundColor('#F5F5F5')
             .borderRadius(25)
             .padding({ left: 20, right: 20 })
             .fontSize(16)
+            .type(this.isConfirmPasswordVisible ? InputType.Normal : InputType.Password)
             .onChange((value: string) => {
               this.confirmPassword = value
             })
@@ -127,48 +123,6 @@ export struct RegisterPage {
         .width('100%')
         .backgroundColor('#F5F5F5')
         .borderRadius(25)
-        .margin({ bottom: 20 })
-
-        // Terms agreement
-        Row() {
-          Button() {
-            Image(this.agreeTerms ? $r('app.media.startIcon') : $r('app.media.chevron_up'))
-              .width(16)
-              .height(16)
-              .fillColor(this.agreeTerms ? '#FF6B35' : '#CCCCCC')
-          }
-          .width(20)
-          .height(20)
-          .backgroundColor('transparent')
-          .borderRadius(10)
-          .onClick(() => {
-            this.agreeTerms = !this.agreeTerms
-          })
-
-          Text('我已阅读并同意')
-            .fontSize(14)
-            .fontColor('#666666')
-            .margin({ left: 8 })
-
-          Text('《用户协议》')
-            .fontSize(14)
-            .fontColor('#FF6B35')
-            .onClick(() => {
-              promptAction.showToast({ message: '用户协议功能开发中' })
-            })
-
-          Text('和')
-            .fontSize(14)
-            .fontColor('#666666')
-
-          Text('《隐私政策》')
-            .fontSize(14)
-            .fontColor('#FF6B35')
-            .onClick(() => {
-              promptAction.showToast({ message: '隐私政策功能开发中' })
-            })
-        }
-        .width('100%')
         .margin({ bottom: 30 })
 
         // Register button
@@ -186,7 +140,7 @@ export struct RegisterPage {
           })
           .margin({ bottom: 20 })
 
-        // Login link
+        // Back to login
         Row() {
           Text('已有账号？')
             .fontSize(14)
@@ -202,73 +156,74 @@ export struct RegisterPage {
         .width('100%')
         .justifyContent(FlexAlign.Center)
       }
-      .width('100%')
+      .width('85%')
+      .padding({ left: 20, right: 20 })
     }
     .width('100%')
     .height('100%')
-    .padding({ left: 20, right: 20 })
     .backgroundColor('#FFFFFF')
     .justifyContent(FlexAlign.Start)
   }
 
-  private canSendCode(): boolean {
-    return this.phone.trim().length === 11 && /^1[3-9]\d{9}$/.test(this.phone)
-  }
-
   private canRegister(): boolean {
-    return this.phone.trim().length > 0 &&
-           this.verificationCode.trim().length > 0 &&
+    return this.telePhone.trim().length > 0 &&
+           this.name.trim().length > 0 &&
            this.password.trim().length >= 6 &&
            this.confirmPassword.trim().length >= 6 &&
-           this.password === this.confirmPassword &&
-           this.agreeTerms
+           this.password === this.confirmPassword
   }
 
-  private sendVerificationCode() {
-    if (!this.canSendCode()) {
-      promptAction.showToast({ message: '请输入正确的手机号' })
-      return
-    }
-
-    this.countdown = 60
-    this.isCodeSent = true
-
-    const timer = setInterval(() => {
-      this.countdown--
-      if (this.countdown <= 0) {
-        clearInterval(timer)
-      }
-    }, 1000)
-
-    promptAction.showToast({ message: '验证码已发送' })
-  }
-
-  private handleRegister() {
+  private async handleRegister() {
     if (!this.canRegister()) {
-      if (!this.agreeTerms) {
-        promptAction.showToast({ message: '请同意用户协议和隐私政策' })
+      if (this.password !== this.confirmPassword) {
+        promptAction.showToast({ message: '两次密码输入不一致' })
       } else {
         promptAction.showToast({ message: '请填写完整信息' })
       }
       return
     }
 
-    if (this.password !== this.confirmPassword) {
-      promptAction.showToast({ message: '两次密码输入不一致' })
-      return
-    }
-
     this.isLoading = true
 
-    // Simulate register API call
-    setTimeout(() => {
-      this.isLoading = false
-      promptAction.showToast({ message: '注册成功' })
-      
-      // Navigate back to login page
-      router.replaceUrl({
-        url: 'pages/LoginPage'
+    let httpRequest: http.HttpRequest | undefined
+    try {
+      httpRequest = http.createHttp()
+
+      // 使用 JSON 请求体提交注册信息
+      const registerUrl = `${this.baseUrl}${this.registerEndpoint}`
+      const payload: GeneratedObjectLiteralInterface_1 = {
+        name: this.name,
+        password: this.password,
+        telePhone: this.telePhone
+      }
+
+      const response = await httpRequest.request(registerUrl, {
+        method: http.RequestMethod.POST,
+        header: {
+          'Content-Type': 'application/json'
+        },
+        extraData: JSON.stringify(payload)
       })
-    }, 1500)
+
+      console.info('Register response status:', response.responseCode)
+      console.info('Register response body:', response.result)
+
+      if (response.responseCode === 200) {
+        promptAction.showToast({ message: '注册成功' })
+        router.replaceUrl({
+          url: 'pages/LoginPage'
+        })
+      } else {
+        promptAction.showToast({ message: '注册失败，请检查信息后重试' })
+      }
+    } catch (error) {
+      console.error('Register error:', error)
+      promptAction.showToast({ message: '网络错误，请检查网络连接' })
+    } finally {
+      this.isLoading = false
+      try {
+        httpRequest?.destroy()
+      } catch {}
+    }
   }
 }

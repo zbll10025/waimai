@@ -2,7 +2,6 @@
 @Component
 export struct UserHeader {
   @State userName: string = '用户昵称'
-  @State userAvatar: Resource = $r('app.media.food1') // 使用默认头像
 
   build() {
     Column() {
@@ -14,7 +13,6 @@ export struct UserHeader {
           .fontColor('#FFFFFF')
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
-
       }
       .width('100%')
       .justifyContent(FlexAlign.SpaceBetween)
@@ -22,30 +20,13 @@ export struct UserHeader {
 
       // 用户信息区域
       Row() {
-        // 用户头像
-        Image(this.userAvatar)
-          .width(60)
-          .height(60)
-          .borderRadius(30)
-          .border({ width: 2, color: '#FFFFFF' })
-          .onClick(() => {
-            // 点击头像编辑个人信息
-          })
-
         // 用户信息
-        Column({ space: 8 }) {
-          Row() {
             Text(this.userName)
               .fontSize(18)
               .fontWeight(600)
               .fontColor('#FFFFFF')
-          }
-          .alignItems(VerticalAlign.Center)
-
-        }
-        .alignItems(HorizontalAlign.Start)
         .layoutWeight(1)
-         .margin({ left: 16 })
+        .margin({ top : 16,left: 16 })
 
       }
       .width('100%')

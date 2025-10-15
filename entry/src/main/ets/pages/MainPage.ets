@@ -1,7 +1,7 @@
 import { TabBarItem,tabBarItemList } from '../models/TabBarItem'
 import { promptAction } from '@kit.ArkUI'
 import { HomePage } from './HomePage'
-import { UserPage } from '../component/UserPage/UserPage'
+import { UserPage } from './UserPage'
 import { OrderListPage } from './OrderListPage'
 
 @Entry

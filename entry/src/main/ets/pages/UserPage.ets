@@ -1,6 +1,8 @@
-import { UserHeader } from './UserHeader'
-import { UserMenu } from './UserMenu'
-import { AboutPage } from './AboutPage'
+import { UserHeader } from '../component/UserPage/UserHeader'
+import { UserMenu } from '../component/UserPage/UserMenu'
+import { AboutPage } from '../component/UserPage/AboutPage'
+import { AccountSecurityPage } from "../component/UserPage/AccountSecurityPage"
+import { AddressPage } from "../component/UserPage/AddressPage"
 @Preview
 @Component
 export struct UserPage {
@@ -11,6 +13,11 @@ export struct UserPage {
   PageMap(name: string) {
     if (name === 'AboutPage') {
       AboutPage()
+    }else if (name === "AccountSecurityPage")
+    {
+      AccountSecurityPage()
+    }else{
+      AddressPage()
     }
   }
   build() {

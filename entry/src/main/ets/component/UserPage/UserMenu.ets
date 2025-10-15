@@ -1,48 +1,14 @@
-import { AddressPage } from './AddressPage'
-import { AccountSecurityPage } from './AccountSecurityPage'
-interface MenuItem {
-  icon: Resource;       // 图标资源
-  title: string;        // 标题
-  subtitle?: string;    // 副标题（可选）
-  showArrow: boolean;   // 是否显示
-  onClick: () => void;  // 点击事件回调
-}
+import { MenuItem,menuArray } from "../../models/UserMenuItem"
+import  ConnectionUtils from "../../utils/network/ConnectionUtils"
+import { AnimatedDrawableDescriptor, promptAction } from '@kit.ArkUI';
+import { AxiosUtil } from "../../utils/network/HttpUtils.ets"
 @Preview
 @Component
 export struct UserMenu {
   @Consume navStack: NavPathStack
-  @State menuItems: Array<MenuItem> = [
-    {
-      icon: $r('app.media.address'),
-      title: '收货地址',
-      subtitle: '管理收货地址',
-      showArrow: true,
-      onClick: () => {
-        this.navStack.replacePath({name:"AddressPage"})
-      }
-    },
-    {
-      icon: $r('app.media.address'),
-      title: '账户与安全',
-      subtitle: '密码、手机号',
-      showArrow: true,
-      onClick: () => {
-        this.navStack.replacePath({name:"AccountSecurityPage"})
-      }
-    },
-    {
-      icon: $r('app.media.address'),
-      title: '关于我们',
-      subtitle: '版本信息',
-      showArrow: true,
-      onClick: () => {
-        this.navStack.replacePath({name:"AboutPage"})
-      }
-    }
-  ]
+  @State menuItems: Array<MenuItem> = menuArray
 
-
-
+  @State inf: dizhi[] = [] //Inf接口自己定义
   @Builder
   menuItemBuilder(item: MenuItem, index: number) {
     Row() {
@@ -76,6 +42,7 @@ export struct UserMenu {
           .width(25)
           .height(25)
           .fillColor('#CCCCCC')
+
       }
     }
     .width('100%')
@@ -84,7 +51,7 @@ export struct UserMenu {
     .alignItems(VerticalAlign.Center)
     .backgroundColor('transparent')
     .onClick(() => {
-      item.onClick()
+      this.navStack.replacePath({name:item.name})
     })
   }
 
@@ -157,10 +124,43 @@ export struct UserMenu {
             .backgroundColor('#FFFFFF')
             .border({ width: 1, color: '#FF4444' })
             .borderRadius(25)
-            .onClick(() => {
-              // 退出登录逻辑
+            //登出逻辑
+            .onClick(async () => {
+              // let httpUtil: HttpUtils = new HttpUtils();
+              // await httpUtil.getHttpRequest<dizhi[]>("/api/addresses").then((value: dizhi[]) => {
+              //   promptAction.showToast({
+              //     message: value[2].aid?.toString()
+              //   });
+              // });
+              //
+              try {
+                let res = await AxiosUtil.get<dizhi[]>("http://192.168.0.182:8080/api/addresses")
+                promptAction.showToast({
+                      message: res.data[1].address
+                    });
+                console.log(res.data[1]);
+              } catch (e) {
+                console.log(e, "失败")
+
+              }
+              // const res = await AxiosUtil.get<dizhi>("/addresses")
+              // promptAction.showToast({
+              //   message: res.data.data as string
+              // })
             })
-            .margin({ bottom: 30 })
         }
+        .margin({ bottom: 30 })
   }
+}
+class dizhi{
+  aid?:number
+  address?:string
+  uid?:number
+}
+class User{
+  id?:number
+  name?:string
+  password?:string
+  telePhone?:string
+  balance?:number
 }

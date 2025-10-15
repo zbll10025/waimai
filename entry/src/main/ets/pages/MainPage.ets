@@ -2,6 +2,7 @@ import { TabBarItem,tabBarItemList } from '../models/TabBarItem'
 import { promptAction } from '@kit.ArkUI'
 import { HomePage } from './HomePage'
 import { UserPage } from '../component/UserPage/UserPage'
+import { OrderListPage } from './OrderListPage'
 
 @Entry
 @Component
@@ -21,7 +22,7 @@ struct MainPage {
           HomePage()
         }.tabBar(this.tabBarBuilder(tabBarItemList[0],0))
         TabContent(){
-          Text('订单')
+          OrderListPage()
         }.tabBar(this.tabBarBuilder(tabBarItemList[1],1))
         TabContent(){
           UserPage()

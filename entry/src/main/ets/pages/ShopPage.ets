@@ -21,9 +21,18 @@ export  struct ShopPage {
     this.cartItemList = JSON.parse(this.cartItemListJson) as CartItemData[]
   }
   onAppear(callback: () => void) {
-    GlobalStore.onBuy?.();
     callback?.();
     return this;
+  }
+  onPageShow(): void {
+    if(GlobalStore.onBuy){
+      this.ClickSugeest()
+    }
+    GlobalStore.onBuy?.();
+    GlobalStore.onBuy = undefined
+  }
+  private ClickSugeest(){
+    this.showCart = true
   }
   build() {
     Row(){

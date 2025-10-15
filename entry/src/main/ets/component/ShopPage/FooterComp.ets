@@ -1,4 +1,6 @@
 import { CartItemData } from "../../models/CartItemData"
+import { router } from "@kit.ArkUI"
+import { RouterPath } from "../../route/RoutePath"
 
 @Component
 export  struct FooterComp{
@@ -23,7 +25,7 @@ export  struct FooterComp{
         }.margin({left:20})
         Column(){
           Row({space:5}){
-            Text(this.cartItemList.reduce((p,c)=>p+((c.discount?c.discount:c.price) as number)*c.count,0).toString()).fontSize(25).fontColor(Color.Red)
+            Text(this.cartItemList.reduce((p,c)=>p+((c.discount?c.discount:c.price) as number)*c.count,0).toFixed(2).toString()).fontSize(25).fontColor(Color.Red)
             Image($r('app.media.chevron_up')).width(12).fillColor('#FAE35A')
           }
           .margin({top:10})
@@ -36,6 +38,10 @@ export  struct FooterComp{
         .height('100%').width(80)
         .borderRadius({topRight:25,bottomRight:25})
         .justifyContent(FlexAlign.Center)
+        .onClick(()=>{
+          router.push({url:RouterPath.CheckoutPage})
+        })
+
       }
       .height(50)
       .width('100%')

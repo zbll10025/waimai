@@ -10,9 +10,9 @@ export struct LoginPage {
   @State password: string = ''
   @State isPasswordVisible: boolean = false
   @State isLoading: boolean = false
-  @StorageProp(ID) userid: string = "123"
+  @StorageProp(ID) userid: string = ""
 
-  private readonly baseUrl: string = 'http://124.71.28.168:8080'
+  private readonly baseUrl: string = 'http://192.168.0.182:8080'
   private readonly loginEndpoint: string = '/api/users/login'
 
   aboutToAppear() {
@@ -214,8 +214,11 @@ export struct LoginPage {
 
       if (response.responseCode === 200) {
         // 登录成功
-
+        this.userid =  JSON.parse(response.result as string).id
+        AppStorage.set(ID,this.userid)
+        console.info('Login response body:',  this.userid)
         promptAction.showToast({ message: '登录成功' })
+
 
         // 跳转到主页面
         router.replaceUrl({
@@ -246,6 +249,7 @@ export struct LoginPage {
   }
 
   private checkAutoLogin() {
+    console.info('Login response body:',  this.userid)
     if (this.userid === '-1') {
       console.info('default')
     } else {

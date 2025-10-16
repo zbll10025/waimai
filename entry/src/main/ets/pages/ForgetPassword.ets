@@ -1,7 +1,7 @@
 import { router } from '@kit.ArkUI'
 import { promptAction } from '@kit.ArkUI'
 
-@Preview
+@Entry
 @Component
 export struct ForgetPassword {
   @State phone: string = ''

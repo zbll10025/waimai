@@ -4,6 +4,9 @@
     "pages/MainPage",
     "pages/HomePage",
     "pages/ShopPage",
-    "pages/CheckoutPage"
+    "pages/CheckoutPage",
+    "pages/LoginPage",
+    "pages/RegisterPage",
+    "pages/ForgetPassword"
   ]
 }

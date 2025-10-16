@@ -79,7 +79,7 @@ struct OrderConfirmPage {
                   // 左侧内容：图片 + 文字+价格
                   Row({ space: 10 }) {
                     Row({space:10}){
-                      Image(item.image)
+                      Image($r('app.media.food1'))
                         .width(60)
                         .height(60)
                         .borderRadius(10)
@@ -107,7 +107,7 @@ struct OrderConfirmPage {
                       .justifyContent(FlexAlign.Start)
                       .width(100)
                     }
-                    Text('￥' + item.price)
+                    Text('￥' + item.discount??item.price.toString())
                       .fontSize(17)
                       .fontWeight(FontWeight.Bold)
                       .fontColor('#FF6600')

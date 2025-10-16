@@ -3,6 +3,7 @@ import { IDataListener } from './interface/IDataListener';
 import { JsonHttpListener } from './JsonHttpListener';
 import { JsonHttpRequest } from './JsonHttpRequest'
 import { JsonPostHttpRequest } from './JsonPostHttpRequest'
+import { JsonPutHttpRequest } from './JsonPutHttpRequest'
 import { TextHttpListener } from './TextHttpListener'
 type JsonPrimitive = string | number | boolean | null;
 type JsonBody = string | object | Array<JsonPrimitive | object>;
@@ -44,6 +45,33 @@ export class HttpFrame {
     const jsonRequest = new JsonPostHttpRequest();
     const textListener = new TextHttpListener(dataListener);
     const requestData = typeof body === 'string' ? body : JSON.stringify(body);
+    const task = new HttpTask(url, requestData, jsonRequest, textListener);
+    task.run();
+  }
+
+  /**
+   * 发起PUT请求
+   * @param url 请求地址
+   * @param body JSON字符串或JSON对象/数组
+   * @param dataListener 数据回调
+   */
+  static sendPutReq<T>(url: string, body: JsonBody, dataListener: IDataListener<T>) {
+    const jsonRequest = new JsonPutHttpRequest();
+    const jsonHttpListener = new JsonHttpListener(dataListener);
+    const requestData = typeof body === 'string' ? body : JSON.stringify(body);
+    const task = new HttpTask(url, requestData, jsonRequest, jsonHttpListener);
+    task.run();
+  }
+
+  /**
+   * 发起PUT请求(纯文本响应，不做JSON解析)
+   */
+  static sendPutTextReq(url: string, body: JsonBody | undefined, dataListener: IDataListener<string>) {
+    const jsonRequest = new JsonPutHttpRequest();
+    const textListener = new TextHttpListener(dataListener);
+    const requestData = (body === undefined || body === null)
+      ? ""
+      : (typeof body === 'string' ? body : JSON.stringify(body));
     const task = new HttpTask(url, requestData, jsonRequest, textListener);
     task.run();
   }

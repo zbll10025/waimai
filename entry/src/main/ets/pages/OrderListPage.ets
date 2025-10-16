@@ -1,7 +1,7 @@
 import { Order, OrderStatus, mockOrders } from "../models/Order"
-import { BillGetHttp, Ip } from "../utils/http"
+import { BillGetHttp, BillStaeChangeHttp, Ip } from "../utils/http"
 import { HttpFrame } from "../utils/http/HttpFrame"
-import { BillGetDataListener } from "../utils/http/HttpModel/DataListener"
+import { BillGetDataListener, BillStateListener } from "../utils/http/HttpModel/DataListener"
 import { ToShopHttpFun } from "../utils/http/HttpModel/HttpFunction"
 
 @Entry
@@ -18,31 +18,28 @@ export struct OrderListPage {
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
   }
 
-  private statusText(status:OrderStatus):string {
+  private statusText(status:number):string {
     switch(status){
-      case OrderStatus.Created: return "待支付"
-      case OrderStatus.Paid: return "制作中"
-      case OrderStatus.Delivering: return "配送中"
-      case OrderStatus.Completed: return "已完成"
-      case OrderStatus.Cancelled: return "已取消"
+      case 0: return "待支付"
+      case 1: return "制作中"
+      case 2: return "配送中"
+      case 3: return "已完成"
+      case 4: return "已取消"
       default: return "未知"
     }
   }
 
   private statusColor(status:OrderStatus):ResourceColor {
     switch(status){
-      case OrderStatus.Completed: return Color.Gray
-      case OrderStatus.Delivering: return Color.Orange
-      case OrderStatus.Paid: return Color.Blue
-      case OrderStatus.Created: return Color.Red
-      case OrderStatus.Cancelled: return Color.Gray
+      case 0: return Color.Gray
+      case 1: return Color.Orange
+      case 2: return Color.Blue
+      case 3: return Color.Red
+      case 4: return Color.Gray
       default: return Color.Gray
     }
   }
 
-  private canCancel(status:OrderStatus):boolean {
-    return !(status === OrderStatus.Completed || status === OrderStatus.Cancelled)
-  }
   @Builder
    orderCard(order:Order){
     Column(){
@@ -54,9 +51,9 @@ export struct OrderListPage {
         }.justifyContent(FlexAlign.Start).layoutWeight(1)
         Column({space:10}){
           Text(this.formatTime(order.time)).fontSize(14)
-          Text(this.statusText(order.status ?? OrderStatus.Created))
+          Text(this.statusText(order.billstate))
             .fontSize(14)
-            .fontColor(this.statusColor(order.status ?? OrderStatus.Created))
+            .fontColor(this.statusColor(order.billstate))
             .margin({left:60})
         }
       }.width('100%')
@@ -89,7 +86,7 @@ export struct OrderListPage {
           .onClick(()=>{
             ToShopHttpFun(order.gid,false,order.food)
           })
-         if(this.canCancel(order.status ?? OrderStatus.Created)){
+         if(order.billstate !=4){
           Button("取消订单")
             .fontSize(14)
             .type(ButtonType.Capsule)
@@ -101,6 +98,7 @@ export struct OrderListPage {
                 this.orders[idx].billstate = OrderStatus.Cancelled
                 this.orders = [...this.orders]
               }
+              HttpFrame.sendPutTextReq(Ip+BillStaeChangeHttp+order.bid.toString()+"/status?status=4",undefined,new BillStateListener())
             })
         }
       }.width('100%').margin({ top:10 })

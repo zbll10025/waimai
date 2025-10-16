@@ -114,3 +114,17 @@ export  class BillPostListener implements  IDataListener<string>{
     promptAction.showToast({ message: "提交失败"});
   }
 }
+
+export  class BillStateListener implements  IDataListener<string>{
+
+  onSuccess(result: string): void {
+    promptAction.showToast({ message: result});
+    setTimeout(()=>{
+
+    },1000)
+  }
+  onFailure(): void {
+    promptAction.showToast({ message: "订单状态改变成功"});
+  }
+}
+

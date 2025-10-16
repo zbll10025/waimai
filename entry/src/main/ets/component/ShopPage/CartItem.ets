@@ -5,18 +5,18 @@ import { CalcBtn } from "../common/Calc"
 
 @Component
 export  struct  CartItem{
-  @State cartItem:CartItemData = {
+  @Prop cartItem:CartItemData = {
     id: -1,
     image:$r('app.media.food1'),
     name:"空",
     count:-1,
     price:-1,
     discount:-0.1,
-    goods: { id: 101, name: "招牌汉堡", image: $r('app.media.food1'), price: 18.8, content: "经典牛肉汉堡，鲜嫩多汁", remark: "人气最高", discount: 0.9, type: "主食", shopName: "麦味屋", month_sale: 120, zhekou: "9折",  url: "" }
+    goods: { gid: 101, gname: "招牌汉堡", gimage: $r('app.media.food1'), price: 18.8, content: "经典牛肉汉堡，鲜嫩多汁", remark: "人气最高", discount: 0.9, type: "主食", shopName: "麦味屋", monthSale: 120, zhekou: "9折",  url: "" }
   }
   build() {
     Row({space:15}){
-      Image(this.cartItem.image)
+      Image($r('app.media.food1'))
         .width(60).aspectRatio(1).borderRadius(6)
       Column({space:15}){
         Text(this.cartItem.name).fontSize(18).fontWeight(600)

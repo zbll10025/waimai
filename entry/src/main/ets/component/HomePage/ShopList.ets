@@ -1,26 +1,28 @@
 import { Shop } from "../../models/Shop"
 import { router } from "@kit.ArkUI"
 import { RouterPath } from "../../route/RoutePath"
+import { Category, categoryList } from "../../models/Category"
+import { JSON } from "@kit.ArkTS"
+import { ToShopHttpFun } from "../../utils/http/HttpModel/HttpFunction"
 
 @Component
 export  struct  ShopList{
     @Link shopList:Shop[]
     @Builder shopItem(shop:Shop){
         Row(){
-            Image(shop.image)
+            Image($r('app.media.shop1'))
                 .height(110)
                 .width(110)
                 .margin({left:10,top:15})
-
             Column({space:10}){
-                Text(shop.name)
+                Text(shop.sname)
                     .fontSize(30)
                     .fontWeight(FontWeight.Bold)
                 Row({space:5}){
-                    Text(shop.score)
+                    Text(shop.scroce)
                         .fontColor('red')
                         .fontSize(FontWeight.Bold)
-                    Text(`月销售${shop.salesVolume}`)
+                    Text(`月销售${shop.salesVolums}`)
                         .fontSize(10)
                         .margin({bottom:5})
                 }
@@ -42,7 +44,7 @@ export  struct  ShopList{
         .margin({left:10,right:10})
         .backgroundColor('#FFFFFF')
         .onClick(()=>{
-            router.pushUrl({url:RouterPath.ShopPage})
+            ToShopHttpFun(shop.sid,true)
         })
      }
     build() {
@@ -51,11 +53,15 @@ export  struct  ShopList{
             ForEach(this.shopList,(item:Shop)=>{
                     this.shopItem(item)
             })
+            if(this.shopList.length == 0){
+                Text('商品列表暂时为空').fontSize(30).margin({top:150})
+            }
         }
         .width('100%')
         .backgroundColor('#F5F5F5')
         .margin({bottom:120})
-
-
+    }
+    JumpToShop(){
+        
     }
 }

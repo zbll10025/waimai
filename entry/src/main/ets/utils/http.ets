@@ -1,0 +1,5 @@
+export const Ip:string  ='http://192.168.0.141:8080'
+export const SuggestFoodHttp:string = '/api/goods/random'
+export const ShopListHttp:string = '/api/shops/refresh?offset='
+export const CategoryListHttp:string = '/api/categories/shop/'
+export const  CategoryListByGoodsHttp:string = '/api/categories/goods/'

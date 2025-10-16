@@ -5,8 +5,8 @@ import {CalcBtn } from "../common/Calc"
 
 @Component
 export  struct  ShowGoodsComp{
-  @State categoryList:Category[]= categoryList
-  @State menuSelectedIndex:number = 0
+  @Prop categoryList:Category[]= []
+  @Prop menuSelectedIndex:number = 0
   @Builder
   goodsBuilder(item:Goods){
     Row(){
@@ -14,7 +14,7 @@ export  struct  ShowGoodsComp{
         Image($r('app.media.food1')).width(100).aspectRatio(1).borderRadius(6)
       }.height('100%').justifyContent(FlexAlign.Start).margin({left:10,right:10})
       Column({space:5}){
-        Text(item.name)
+        Text(item.gname)
           .fontSize(16).fontWeight(500)
           .textOverflow({overflow:TextOverflow.Ellipsis})
           .maxLines(2)
@@ -25,7 +25,7 @@ export  struct  ShowGoodsComp{
               .fillColor('#FF8000')
           }
         }
-        Text(`月售${item.month_sale}`).fontSize(10).fontColor('#858687')
+        Text(`月售${item.monthSale}`).fontSize(10).fontColor('#858687')
         Text(item.zhekou?item.zhekou:'').fontSize(10).fontColor('#F84D2C')
         Row(){
           Text(){

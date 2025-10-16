@@ -49,7 +49,7 @@ export struct  CartComp{
         }
         .divider({strokeWidth:0.5,color:'#e4e4e4',startMargin:100,endMargin:15})
         .margin({top:15})
-      }.width('100%').height(200).backgroundColor(Color.White).margin({bottom:50})
+      }.width('100%').height(300).backgroundColor(Color.White).margin({bottom:50})
     }
     .width('100%')
     .height('100%')

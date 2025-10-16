@@ -37,8 +37,8 @@ export struct OrderListPage {
       // 顶部：店铺信息与状态
       Row(){
         Row(){
-          Image(order.shopImage).width(24).height(24).borderRadius(12)
-          Text(order.shopName).fontWeight(FontWeight.Medium)
+          Image(order.simgStr).width(24).height(24).borderRadius(12)
+          Text(order.sname).fontWeight(FontWeight.Medium)
         }.justifyContent(FlexAlign.Start).layoutWeight(1)
          Text(this.statusText(order.status ?? OrderStatus.Created))
           .fontSize(14)
@@ -48,10 +48,10 @@ export struct OrderListPage {
       // 中间：商品图片 + 名称 + 价格数量
       Row(){
         // 根据要求，商品图片统一用 Image(item.food?.image)
-        Image(order.items[0]?.food?.image)
+        Image(order.items[0]?.food?.gimage)
           .width(100).aspectRatio(1)
         Column({space:5}){
-          Text(order.title).fontSize(22).fontWeight(FontWeight.Medium).maxLines(1)
+          Text(order.gname).fontSize(22).fontWeight(FontWeight.Medium).maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis }).width(150).margin({bottom:5})
           Text(`￥${order.items[0]?.price.toFixed(2)}`)
             .fontColor('#1F1F1F')
@@ -80,7 +80,7 @@ export struct OrderListPage {
             .fontColor('#D03030')
             .onClick(()=>{
               // 示例：仅本地变更状态为已取消
-              const idx = this.orders.findIndex(o=>o.id===order.id)
+              const idx = this.orders.findIndex(o=>o.bid===order.bid)
               if(idx>=0){
                 this.orders[idx].status = OrderStatus.Cancelled
                 this.orders = [...this.orders]

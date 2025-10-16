@@ -10,17 +10,17 @@ export enum OrderStatus {
 }
 
 export class OrderItem {
-  id:number = -1
+  bid:number = -1
   food?: Goods
   price:number = 0
   count:number = 1
 }
 
 export class Order {
-  id?:number = -1
-  shopName?:string = ""
-  shopImage?:ResourceStr = $r('app.media.shop1')
-  title?:string = "" // 订单名字（可显示第一个商品名+等）
+  bid?:number = -1
+  sname?:string = ""
+  simgStr?:ResourceStr = $r('app.media.shop1')
+  gname?:string = ""
   status?:OrderStatus = OrderStatus.Created
   items:OrderItem[] = []
   get totalPrice():number {
@@ -37,10 +37,10 @@ export class Order {
 
 function buildOrder(partial: Partial<Order>): Order {
   const o = new Order()
-  if (partial.id !== undefined) { o.id = partial.id }
-  if (partial.shopName !== undefined) { o.shopName = partial.shopName }
-  if (partial.shopImage !== undefined) { o.shopImage = partial.shopImage }
-  if (partial.title !== undefined) { o.title = partial.title }
+  if (partial.bid !== undefined) { o.bid = partial.bid }
+  if (partial.sname !== undefined) { o.sname = partial.sname }
+  if (partial.simgStr !== undefined) { o.simgStr = partial.simgStr }
+  if (partial.gname !== undefined) { o.gname = partial.gname }
   if (partial.status !== undefined) { o.status = partial.status }
   if (partial.items !== undefined) { o.items = partial.items }
   return o
@@ -48,43 +48,43 @@ function buildOrder(partial: Partial<Order>): Order {
 
 export const mockOrders:Order[] = [
   buildOrder({
-    id: 1001,
-    shopName: "重庆鸡公煲",
-    shopImage: $r('app.media.shop1'),
-    title: "招牌炒鸡+火锅面+米饭",
+    bid: 1001,
+    sname: "重庆鸡公煲",
+    simgStr: $r('app.media.shop1'),
+    gname: "招牌炒鸡+火锅面+米饭",
     status: OrderStatus.Completed,
     items: [
-      { id: 1, price: 19.88, count: 1, food: { id: 1, name: "招牌炒鸡", price: 19.88, image: $r('app.media.food1') } as Goods }
+      { bid: 1, price: 19.88, count: 1, food: { gid: 1, gname: "招牌炒鸡", price: 19.88, gimage: $r('app.media.food1') } as Goods }
     ]
   }),
   buildOrder({
-    id: 1002,
-    shopName: "原味汤粉王",
-    shopImage: $r('app.media.shop1'),
-    title: "招牌汤粉(大份)",
+    bid: 1002,
+    sname: "原味汤粉王",
+    simgStr: $r('app.media.shop1'),
+    gname: "招牌汤粉(大份)",
     status: OrderStatus.Delivering,
     items: [
-      { id: 2, price: 25.5, count: 2, food: { id: 2, name: "汤粉", price: 12.75, image: $r('app.media.food1') } as Goods }
+      { bid: 2, price: 25.5, count: 2, food: { gid: 2, gname: "汤粉", price: 12.75, gimage: $r('app.media.food1') } as Goods }
     ]
   }),
   buildOrder({
-    id: 1003,
-    shopName: "粥道",
-    shopImage: $r('app.media.shop1'),
-    title: "皮蛋瘦肉粥",
+    bid: 1003,
+    sname: "粥道",
+    simgStr: $r('app.media.shop1'),
+    gname: "皮蛋瘦肉粥",
     status: OrderStatus.Paid,
     items: [
-      { id: 3, price: 9.9, count: 3, food: { id: 3, name: "皮蛋瘦肉粥", price: 9.9, image: $r('app.media.food1') } as Goods }
+      { bid: 3, price: 9.9, count: 3, food: { gid: 3, gname: "皮蛋瘦肉粥", price: 9.9, gimage: $r('app.media.food1') } as Goods }
     ]
   }),
   buildOrder({
-    id: 1004,
-    shopName: "吉发瓦香鸡",
-    shopImage: $r('app.media.shop1'),
-    title: "瓦香鸡+米饭",
+    bid: 1004,
+    sname: "吉发瓦香鸡",
+    simgStr: $r('app.media.shop1'),
+    gname: "瓦香鸡+米饭",
     status: OrderStatus.Created,
     items: [
-      { id: 4, price: 29.9, count: 1, food: { id: 4, name: "瓦香鸡", price: 29.9, image: $r('app.media.food1') } as Goods }
+      { bid: 4, price: 29.9, count: 1, food: { gid: 4, gname: "瓦香鸡", price: 29.9, gimage: $r('app.media.food1') } as Goods }
     ]
   })
 ]

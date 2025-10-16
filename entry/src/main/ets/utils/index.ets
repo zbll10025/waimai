@@ -43,3 +43,4 @@ export interface IGlobalStore {
 }
 
 export const GlobalStore: IGlobalStore = {};
+

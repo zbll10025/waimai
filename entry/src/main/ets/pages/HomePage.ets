@@ -50,6 +50,9 @@ export  struct HomePage {
       if(this.isDownRefresh){return}
       this.isDownRefresh =true
       HttpFrame.sendReq<Goods[]>(Ip+SuggestFoodHttp,new SuggestGoodsDataListener(this))
+      if(this.shopList.length<5){
+        HttpFrame.sendReq<Shop[]>(Ip+ShopListHttp+(this.shopOffer.toString()),new ShopListDataListener(this))
+      }
       promptAction.showToast({ message: this.suggestFoodList.length.toString()});
     })
   }

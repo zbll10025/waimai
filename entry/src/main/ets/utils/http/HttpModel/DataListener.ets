@@ -5,10 +5,11 @@ import { HomePage } from "../../../pages/HomePage";
 import { Shop } from "../../../models/Shop";
 import { Category } from "../../../models/Category";
 import { RouterPath } from "../../../route/RoutePath";
-import { AddCart, GlobalStore } from "../..";
+import { AddCart, ClearCart, GlobalStore } from "../..";
 import { ShopPage } from "../../../pages/ShopPage";
 import { Order } from "../../../models/Order";
 import { OrderListPage } from "../../../pages/OrderListPage";
+import { Bill } from "../../../models/Bill";
 
 export  class SuggestGoodsDataListener implements  IDataListener<Goods[]>{
     private HomePage: HomePage;
@@ -98,5 +99,18 @@ export  class BillGetDataListener implements  IDataListener<Order[]>{
       this.orderListPage.isDownRefresh =false
     },500)
 
+  }
+}
+export  class BillPostListener implements  IDataListener<string>{
+
+  onSuccess(result: string): void {
+    promptAction.showToast({ message: "提交成功"+result});
+    setTimeout(()=>{
+      ClearCart()
+      router.pushUrl({url:RouterPath.MainPage})
+    },1000)
+  }
+  onFailure(): void {
+    promptAction.showToast({ message: "提交失败"});
   }
 }

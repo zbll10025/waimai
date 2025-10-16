@@ -1,6 +1,11 @@
 import promptAction from '@ohos.promptAction';
+import { Bill } from '../models/Bill';
 import { CartItemData } from '../models/CartItemData';
-import { CARTKEY } from '../utils';
+import { CARTKEY, ClearCart } from '../utils';
+import { BillsPostHttp, Ip } from '../utils/http';
+import { HttpFrame } from '../utils/http/HttpFrame';
+import { BillPostListener } from '../utils/http/HttpModel/DataListener';
+import { JSON } from '@kit.ArkTS';
 
 interface Product {
   name: string;
@@ -153,12 +158,27 @@ struct OrderConfirmPage {
         .fontSize(18)
         .borderRadius(25)
         .onClick(() => {
-          promptAction.showToast({
+          this.BillPost()
+          /*promptAction.showToast({
             message: '订单已提交'
-          })
+          })*/
         })
         .position({ bottom: 20, left: '5%' }) // 悬浮在屏幕底部
     }
 
+  }
+  BillPost(){
+    let bills:Bill[] = []
+    this.cartItemList.forEach(async (item:CartItemData)=>{
+      let bill = new Bill()
+      bill.uid = 1
+      bill.gid = item.id
+      bill.cost = (item.discount??item.price) * item.count
+      bill.gcount = item.count
+      bill.billstate = 1
+      //let res = await AxiosUtil.post<string>(Ip+BillsPostHttp,bill)
+      //promptAction.showToast({ message: res.data.data})
+      HttpFrame.sendPostTextReq(Ip+BillsPostHttp,JSON.stringify(bill),new BillPostListener())
+    })
   }
 }

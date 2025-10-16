@@ -2,6 +2,7 @@ import { Order, OrderStatus, mockOrders } from "../models/Order"
 import { BillGetHttp, Ip } from "../utils/http"
 import { HttpFrame } from "../utils/http/HttpFrame"
 import { BillGetDataListener } from "../utils/http/HttpModel/DataListener"
+import { ToShopHttpFun } from "../utils/http/HttpModel/HttpFunction"
 
 @Entry
 @Component
@@ -86,6 +87,7 @@ export struct OrderListPage {
           .margin({ right:8 })
           .fontColor('#232426')
           .onClick(()=>{
+            ToShopHttpFun(order.gid,false,order.food)
           })
          if(this.canCancel(order.status ?? OrderStatus.Created)){
           Button("取消订单")

@@ -30,7 +30,7 @@ struct MainPage {
       }
         .onChange((index:number)=>{
           this.selectIndex = index
-          promptAction.showToast({message:'当前页面为:'+index})
+          //promptAction.showToast({message:'当前页面为:'+index})
         })
 
   }

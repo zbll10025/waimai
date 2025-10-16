@@ -7,6 +7,8 @@ import { Category } from "../../../models/Category";
 import { RouterPath } from "../../../route/RoutePath";
 import { AddCart, GlobalStore } from "../..";
 import { ShopPage } from "../../../pages/ShopPage";
+import { Order } from "../../../models/Order";
+import { OrderListPage } from "../../../pages/OrderListPage";
 
 export  class SuggestGoodsDataListener implements  IDataListener<Goods[]>{
     private HomePage: HomePage;
@@ -71,6 +73,30 @@ export  class CategoryListDataListener implements  IDataListener<Category[]>{
   }
   onFailure() {
     promptAction.showToast({ message: "失败了"});
+
+  }
+}
+export  class BillGetDataListener implements  IDataListener<Order[]>{
+
+  orderListPage:OrderListPage
+  constructor(orderListPage:OrderListPage) {
+    this.orderListPage = orderListPage
+  }
+  onSuccess(result: Order[]) {
+    this.orderListPage.orders = result
+    promptAction.showToast({ message: "刷新成功"});
+    setTimeout(()=>{
+      this.orderListPage.isRefreshing = false
+      this.orderListPage.isDownRefresh =false
+    },500)
+    //promptAction.showToast({ message: JSON.stringify(result[0])});
+  }
+  onFailure() {
+    promptAction.showToast({ message: "失败了"});
+    setTimeout(()=>{
+      this.orderListPage.isRefreshing = false
+      this.orderListPage.isDownRefresh =false
+    },500)
 
   }
 }

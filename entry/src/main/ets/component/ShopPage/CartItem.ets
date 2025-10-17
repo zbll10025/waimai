@@ -26,8 +26,8 @@ export  struct  CartItem{
           .maxLines(2)
         Row(){
           Row({space:3}){
-            Text(this.cartItem.discount?('￥'+this.cartItem.discount?.toString()):this.cartItem.price?.toString()).fontSize(18).fontWeight(600)
-            Text(this.cartItem.discount?this.cartItem.price?.toString():'').fontSize(10).fontColor('#999').decoration({ type: TextDecorationType.LineThrough, style: TextDecorationStyle.SOLID})
+            Text(this.cartItem.discount?(this.cartItem.discount?.toString()):this.cartItem.price?.toString()).fontSize(18).fontWeight(600)
+            //Text(this.cartItem.discount?this.cartItem.price?.toString():'').fontSize(10).fontColor('#999').decoration({ type: TextDecorationType.LineThrough, style: TextDecorationStyle.SOLID})
           }
           Row({space:5}){
             CalcBtn({iconResource:$r('app.media.minus'),isPlain:true})

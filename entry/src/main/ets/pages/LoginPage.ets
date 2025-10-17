@@ -6,11 +6,6 @@ import { AxiosUtil } from '../utils/network/HttpUtils'
 export const ID = 'userid'
 PersistentStorage.persistProp(ID,'-1')
 
-interface GeneratedObjectLiteralInterface_1 {
-  name: string;
-  password: string;
-}
-
 @Entry
 @Component
 export struct LoginPage {
@@ -205,41 +200,21 @@ export struct LoginPage {
     this.isLoading = true
 
     try {
-
-      // const httpRequest = http.createHttp()
-      //
-      // // 构建请求URL，使用Query参数
-      // const loginUrl = `${this.baseUrl}${this.loginEndpoint}?name=${encodeURIComponent(this.username)}&password=${encodeURIComponent(this.password)}`
-      //
-      // const response = await httpRequest.request(loginUrl, {
-      //   method: http.RequestMethod.POST,
-      //   header: {
-      //     'Content-Type': 'application/json'
-      //   }
-      // })
-
-      // console.info('Login response status:', response.responseCode)
-      // console.info('Login response body:', response.result)
-
       let  response = await AxiosUtil.post<User>(`${this.baseUrl || ''}${this.loginEndpoint || ''}?name=${encodeURIComponent(this.username || '')}&password=${encodeURIComponent(this.password || '')}`)
-      console.log("zzzz"+JSON.stringify(response.status))
       if (response.status === 200) {
         // 登录成功
-        this.userid = response.data?.toString()??""
-        console.log("111111111111111"+this.userid);
+        this.userid = response.data.id?.toString()??""
+        console.log("111111111111111:"+this.userid);
         promptAction.showToast({ message: '登录成功' })
         AppStorage.set(ID,this.userid)
         // 跳转到主页面
         router.replaceUrl({
           url: 'pages/MainPage'
         })
-      } else {
-        // 登录失败
-        promptAction.showToast({ message: '用户名或密码错误' })
       }
     } catch (error) {
       console.error('Login error:', error)
-      promptAction.showToast({ message: '网络错误，请检查网络连接' })
+      promptAction.showToast({ message: '用户名或密码错误' })
     } finally {
       this.isLoading = false
     }

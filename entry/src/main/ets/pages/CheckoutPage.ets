@@ -107,7 +107,7 @@ struct OrderConfirmPage {
                       .justifyContent(FlexAlign.Start)
                       .width(100)
                     }
-                    Text('￥' + item.discount??item.price.toString())
+                    Text('￥' + (item.discount??item.price).toString())
                       .fontSize(17)
                       .fontWeight(FontWeight.Bold)
                       .fontColor('#FF6600')

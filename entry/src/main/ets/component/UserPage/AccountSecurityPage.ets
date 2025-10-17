@@ -1,5 +1,9 @@
+import { ID } from "../../pages/LoginPage";
+
 @Component
 export struct AccountSecurityPage {
+  @StorageProp(ID) userid: string = '';
+
   build() {
     NavDestination() {
       Column() {

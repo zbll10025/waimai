@@ -1,5 +1,7 @@
+
 @Component
 export struct AboutPage {
+
   build() {
     NavDestination() {
       Column() {
@@ -13,11 +15,29 @@ export struct AboutPage {
             .fontSize(16)
             .fontColor('#666666')
             .margin({ top: 6 })
+          
 
-          Text('这是一个用于演示的关于页面。')
-            .fontSize(16)
+          Text('前端项目：')
+            .fontSize(14)
+            .fontColor('#666666')
+            .margin({ top: 8 })
+
+          Text('https://github.com/zbll10025/waimai')
+            .fontSize(14)
+            .fontColor('#007AFF')
+            .decoration({ type: TextDecorationType.Underline })
+            .margin({ top: 4 })
+
+          Text('后端项目：')
+            .fontSize(14)
             .fontColor('#666666')
             .margin({ top: 12 })
+
+          Text('https://github.com/zbll10025/wmHouDuan')
+            .fontSize(14)
+            .fontColor('#007AFF')
+            .decoration({ type: TextDecorationType.Underline })
+            .margin({ top: 4 })
         }
         .width('100%')
         .padding({

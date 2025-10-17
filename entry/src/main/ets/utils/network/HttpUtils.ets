@@ -3,7 +3,7 @@ import axios,{InternalAxiosRequestConfig,AxiosError,AxiosResponse, Type} from '@
 //1.axios实例对象
 
 export  const axiosInstance =axios.create({
-  baseURL: "", //模拟的后端数据请求
+  baseURL: "http://192.168.0.182:8080/api", //模拟的后端数据请求
   timeout: 10000, //请求超时时间，可选
   // headers: {'X-Custom-Header': 'foobar'} //请求头，可选
 })
@@ -39,7 +39,7 @@ export class AxiosUtil{
     return axiosInstance.post<null,ResType<T>>(url,data)
   }
   static  put<T>(url:string,data?:object):Promise<ResType<T>>{
-    return axiosInstance.put<null,ResType<T>>(url,{data})
+    return axiosInstance.put<null,ResType<T>>(url,data)
   }
   static  delete<T>(url:string,data?:object):Promise<ResType<T>>{
     return axiosInstance.delete<null,ResType<T>>(url,data)

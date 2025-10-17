@@ -7,9 +7,23 @@ import { Category } from "../../../models/Category";
 import { RouterPath } from "../../../route/RoutePath";
 import { AddCart, ClearCart, GlobalStore } from "../..";
 import { ShopPage } from "../../../pages/ShopPage";
-import { Order } from "../../../models/Order";
+import { User } from "../../../models/User";
+import { UserHeader } from "../../../component/UserPage/UserHeader";
 import { OrderListPage } from "../../../pages/OrderListPage";
-import { Bill } from "../../../models/Bill";
+import { Order } from "../../../models/Order";
+
+export  class UserDataListener implements IDataListener<User>{
+  private userHeader:UserHeader
+  constructor(userHeader: UserHeader) {
+    this.userHeader = userHeader;
+  }
+  onSuccess(result: User) {
+    this.userHeader.userName = result.name??""
+  }
+  onFailure() {
+    promptAction.showToast({ message: "失败了"});
+  }
+}
 
 export  class SuggestGoodsDataListener implements  IDataListener<Goods[]>{
     private HomePage: HomePage;

@@ -3,6 +3,7 @@ import { BillGetHttp, BillStaeChangeHttp, Ip } from "../utils/http"
 import { HttpFrame } from "../utils/http/HttpFrame"
 import { BillGetDataListener, BillStateListener } from "../utils/http/HttpModel/DataListener"
 import { ToShopHttpFun } from "../utils/http/HttpModel/HttpFunction"
+import { ID } from "./LoginPage"
 
 @Entry
 @Component
@@ -10,6 +11,8 @@ export struct OrderListPage {
   @State orders:Order[] = []
   @State isRefreshing:boolean = false
   @State isDownRefresh:boolean =false
+  @StorageProp(ID)
+  userId:string = '-1'
 
   private formatTime(t?:string):string {
     if(!t){ return "" }
@@ -43,6 +46,7 @@ export struct OrderListPage {
   @Builder
    orderCard(order:Order){
     Column(){
+      Text("订单号："+order.bid.toString()).fontWeight(FontWeight.Medium).margin({right:250})
       // 顶部：店铺信息与状态
       Row(){
         Row(){
@@ -135,11 +139,11 @@ export struct OrderListPage {
     }.onRefreshing(()=>{
       if(this.isDownRefresh){return}
       this.isDownRefresh =true
-      HttpFrame.sendReq<Order[]>(Ip+BillGetHttp+'1',new BillGetDataListener(this))
+      HttpFrame.sendReq<Order[]>(Ip+BillGetHttp+this.userId,new BillGetDataListener(this))
     })
   }
   aboutToAppear(): void {
-    HttpFrame.sendReq<Order[]>(Ip+BillGetHttp+'1',new BillGetDataListener(this))
+    HttpFrame.sendReq<Order[]>(Ip+BillGetHttp+this.userId,new BillGetDataListener(this))
   }
 }
 

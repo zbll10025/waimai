@@ -38,6 +38,6 @@ export struct Home_Swiper{
               }
             }
           )
-      }.height(200).width('95%')
+      }.height(250).width('95%')
     }
 }

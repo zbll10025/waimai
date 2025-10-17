@@ -1,9 +1,10 @@
 import axios,{InternalAxiosRequestConfig,AxiosError,AxiosResponse, Type} from '@ohos/axios'
+import { Ip } from '../http';
 
 //1.axios实例对象
 
 export  const axiosInstance =axios.create({
-  baseURL: "http://192.168.0.182:8080/api", //模拟的后端数据请求
+  baseURL: Ip+"/api", //模拟的后端数据请求
   timeout: 10000, //请求超时时间，可选
   // headers: {'X-Custom-Header': 'foobar'} //请求头，可选
 })

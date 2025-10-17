@@ -6,6 +6,9 @@ import { BillsPostHttp, Ip } from '../utils/http';
 import { HttpFrame } from '../utils/http/HttpFrame';
 import { BillPostListener } from '../utils/http/HttpModel/DataListener';
 import { JSON } from '@kit.ArkTS';
+import { ID, TelePone, UserName } from './LoginPage';
+import { SelectedAddress } from './AddressPage';
+import router from '@ohos.router';
 
 interface Product {
   name: string;
@@ -16,10 +19,12 @@ interface Product {
 @Entry
 @Component
 struct OrderConfirmPage {
-  @State address: string = '男生宿舍10栋 桂电男生宿舍B区-10栋';
-  @State receiver: string = '翟先生';
-  @State phone: string = '19103411009';
+  @StorageProp(SelectedAddress) address: string = '地址暂时为空';
+  @StorageProp(UserName) receiver: string = '';
+  @StorageProp(TelePone) phone: string = '';
   @State totalPrice: number = 0;
+  @StorageProp(ID)
+  userId:string = '-1'
   @StorageProp(CARTKEY)
   @Watch('onChangeCart')
   cartItemListJson:string  = '[]'
@@ -44,12 +49,15 @@ struct OrderConfirmPage {
         Column({ space: 16 }) {
           // ===== 顶部地址信息框 =====
           Column({ space: 6 }) {
-            Text(this.address)
+            Text("收货地址："+this.address)
               .fontSize(18)
               .fontWeight(FontWeight.Bold)
               .fontColor('#000000')
+              .onClick(()=>{
+                router.pushUrl({url:"pages/AddressPage"})
+              })
 
-            Text(`${this.receiver}  ${this.phone}`)
+            Text(`用户名称：${this.receiver}  用户电话：${this.phone}`)
               .fontSize(15)
               .fontColor('#666666')
 
@@ -171,7 +179,7 @@ struct OrderConfirmPage {
     let bills:Bill[] = []
     this.cartItemList.forEach(async (item:CartItemData)=>{
       let bill = new Bill()
-      bill.uid = 1
+      bill.uid = Number(this.userId);
       bill.gid = item.id
       bill.cost = (item.discount??item.price) * item.count
       bill.gcount = item.count

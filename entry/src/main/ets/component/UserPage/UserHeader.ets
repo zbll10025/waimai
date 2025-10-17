@@ -3,24 +3,18 @@ import { Bill } from '../../models/Bill'
 import { User }  from "../../models/User.ets"
 import { ID } from '../../pages/LoginPage'
 import { AxiosUtil } from "../../utils/network/HttpUtils.ets"
-import {OrderStatus} from "../../models/Order.ets"
-// // 订单状态枚举
-// export enum OrderStatus {
-//   Created = 0,       // 已下单/待支付
-//   Paid = 1,          // 已支付/制作中
-//   Delivering = 2,    // 配送中
-//   Completed = 3,     // 已完成
-//   Cancelled = 4      // 已取消
-// }
+import { Order, OrderStatus} from "../../models/Order.ets"
+
+
 
 @Preview
 @Component
 export struct UserHeader {
-  @State userName: string = '用户昵称'
-  @State orders:Bill[] = []
+  @State userName:string = "用户"
+  @State orders:Order[] = []
   @Link isLogin:boolean
   @StorageProp(ID) userid: string = '';
-  
+  selectedAddress: string = '';
   // 订单状态统计
   @State pendingPaymentCount: number = 0    // 待付款
   @State deliveringCount: number = 0        // 待收货
@@ -28,10 +22,9 @@ export struct UserHeader {
 
   async aboutToAppear() {
     let res1 = await AxiosUtil.get<User>("users/"+this.userid)
-    console.log("11111:"+res1.data.name)
     this.userName = res1.data.name??""
 
-    let res2 = await AxiosUtil.get<Bill[]>("bills")
+    let res2 = await AxiosUtil.get<Order[]>("bills/user/"+this.userid)
     this.orders = res2.data
     
     // 统计不同状态的订单数量

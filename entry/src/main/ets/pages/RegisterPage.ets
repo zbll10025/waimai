@@ -1,8 +1,9 @@
 import { router } from '@kit.ArkUI'
 import { promptAction } from '@kit.ArkUI'
 import http from '@ohos.net.http'
+import { Ip } from '../utils/http';
 
-interface GeneratedObjectLiteralInterface_1 {
+interface Uer {
   name: string;
   password: string;
   telePhone: string;
@@ -18,9 +19,6 @@ export struct RegisterPage {
   @State isPasswordVisible: boolean = false
   @State isConfirmPasswordVisible: boolean = false
   @State isLoading: boolean = false
-  
-  private readonly baseUrl: string = 'http://192.168.0.128:8080'
-  private readonly registerEndpoint: string = '/api/users'
 
   build() {
     Column() {
@@ -190,19 +188,20 @@ export struct RegisterPage {
       httpRequest = http.createHttp()
 
       // 使用 JSON 请求体提交注册信息
-      const registerUrl = `${this.baseUrl}${this.registerEndpoint}`
-      const payload: GeneratedObjectLiteralInterface_1 = {
+      const registerUrl = Ip
+      const user: Uer = {
         name: this.name,
         password: this.password,
         telePhone: this.telePhone
       }
+
 
       const response = await httpRequest.request(registerUrl, {
         method: http.RequestMethod.POST,
         header: {
           'Content-Type': 'application/json'
         },
-        extraData: JSON.stringify(payload)
+        extraData: JSON.stringify(user)
       })
 
       console.info('Register response status:', response.responseCode)

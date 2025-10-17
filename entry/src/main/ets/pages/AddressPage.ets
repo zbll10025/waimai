@@ -1,11 +1,16 @@
-import { Address } from '../../models/Address';
-import { AxiosUtil } from '../../utils/network/HttpUtils';
+import { Address } from '../models/Address';
+import { AxiosUtil } from '../utils/network/HttpUtils';
 import { promptAction } from '@kit.ArkUI';
-import { ID } from '../../pages/LoginPage';
+import { ID } from './LoginPage';
 
+export const SelectedAddress:string = "selectedAddress"
+
+PersistentStorage.persistProp(SelectedAddress,'')
+@Entry
 @Component
 export struct AddressPage {
   @StorageProp(ID) userid: string = '';
+  @StorageProp(SelectedAddress) selectedAddress: string = '';
   @State addressList: Address[] = [];
   @State showAddDialog: boolean = false;
   @State showEditDialog: boolean = false;
@@ -21,11 +26,25 @@ export struct AddressPage {
     let res = await AxiosUtil.get<Address[]>("addresses/user/"+this.userid)
     if(res.status === 200){
       this.addressList = res.data
+      // 恢复上次选择；若不存在则默认选中第一个
+      this.CheckHasSelectedInList()
     }else{
       promptAction.showToast({ message: res.statusText })
     }
   }
 
+  CheckHasSelectedInList(){
+    const hasSelectedInList = this.addressList.some(item => item.address === this.selectedAddress)
+    if (!hasSelectedInList) {
+      if (this.addressList.length > 0) {
+        this.selectedAddress = this.addressList[0].address
+        AppStorage.set(SelectedAddress, this.selectedAddress)
+      } else {
+        this.selectedAddress = ''
+        AppStorage.set(SelectedAddress, '')
+      }
+    }
+  }
   // 添加新地址
   async  addAddress() {
     if (this.newAddressText.trim().length > 0) {
@@ -71,6 +90,18 @@ export struct AddressPage {
     }
   }
 
+  // 选择地址
+  selectAddress(address: Address) {
+    this.selectedAddress = address.address;
+    AppStorage.set(SelectedAddress,this.selectedAddress)
+    promptAction.showToast({ message: '已选择地址: ' + address.address });
+  }
+
+  // 检查地址是否被选中
+  isAddressSelected(address: Address): boolean {
+    return this.selectedAddress === address.address;
+  }
+
   // 删除地址
   deleteAddress(address: Address) {
      AlertDialog.show({
@@ -88,12 +119,13 @@ export struct AddressPage {
           let res = await AxiosUtil.delete<string>("addresses/"+address.aid)
           if(res.status === 200){
             promptAction.showToast({ message: res.data })
+            this.selectedAddress = '地址暂时为空'
+            AppStorage.set(SelectedAddress, this.selectedAddress)
+            this.addressList = this.addressList.filter(item => item.aid !== address.aid);
           }
           else {
             promptAction.showToast({ message: res.statusText })
           }
-
-          this.addressList = this.addressList.filter(item => item.aid !== address.aid);
         }
       }
     });
@@ -208,11 +240,27 @@ export struct AddressPage {
   AddressItem(address: Address, index: number) {
     Column() {
       Row() {
+        // 选择指示器
         Column() {
+          if (this.isAddressSelected(address)) {
+            Image($r('app.media.address'))
+              .width(40)
+              .height(40)
+              .fillColor('#FF6B35')
+          } else {
+            Image($r('app.media.address'))
+              .width(40)
+              .height(40)
+              .fillColor('#CCCCCC')
+          }
+        }
+        .margin({ right: 12 })
 
+        Column() {
           Text(address.address)
             .fontSize(16)
-            .fontColor('#333333')
+            .fontColor(this.isAddressSelected(address) ? '#FF6B35' : '#333333')
+            .fontWeight(this.isAddressSelected(address) ? 600 : 400)
             .textAlign(TextAlign.Start)
             .maxLines(3)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
@@ -220,6 +268,10 @@ export struct AddressPage {
         }
         .layoutWeight(1)
         .alignItems(HorizontalAlign.Start)
+        .onClick(() => {
+          this.selectAddress(address);
+        })
+
         Column() {
           Button('编辑')
             .fontSize(12)
@@ -252,9 +304,16 @@ export struct AddressPage {
         bottom: 16
       })
     }
+    .onClick(() => {
+      this.selectAddress(address);
+    })
     .width('100%')
-    .backgroundColor('#FFFFFF')
+    .backgroundColor(this.isAddressSelected(address) ? '#FFF5F0' : '#FFFFFF')
     .borderRadius(12)
+    .border({
+      width: this.isAddressSelected(address) ? 2 : 1,
+      color: this.isAddressSelected(address) ? '#FF6B35' : '#E5E5E5'
+    })
     .margin({ bottom: 12 })
   }
 

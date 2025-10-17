@@ -2,9 +2,13 @@ import { router } from '@kit.ArkUI'
 import { promptAction } from '@kit.ArkUI'
 import { AxiosUtil } from '../utils/network/HttpUtils'
 
-
+export const UserName:string = "userName"
+export const TelePone:string = "TelePone"
 export const ID = 'userid'
+
 PersistentStorage.persistProp(ID,'-1')
+PersistentStorage.persistProp(UserName,'')
+PersistentStorage.persistProp(TelePone,'')
 
 @Entry
 @Component
@@ -14,9 +18,8 @@ export struct LoginPage {
   @State isPasswordVisible: boolean = false
   @State isLoading: boolean = false
   @StorageProp(ID) userid: string = ""
-
-  private readonly baseUrl: string = 'http://192.168.0.182:8080'
-  private readonly loginEndpoint: string = '/api/users/login'
+  @StorageProp(UserName) userName: string = '用户昵称'
+  @StorageProp(TelePone) telePone:string = ""
 
   aboutToAppear() {
     // 页面加载时检查是否已经登录
@@ -196,16 +199,21 @@ export struct LoginPage {
       promptAction.showToast({ message: '请填写完整信息' })
       return
     }
-    console.log(`114514${this.baseUrl || ''}${this.loginEndpoint || ''}?name=${encodeURIComponent(this.username || '')}&password=${encodeURIComponent(this.password || '')}`);
+
     this.isLoading = true
 
     try {
-      let  response = await AxiosUtil.post<User>(`${this.baseUrl || ''}${this.loginEndpoint || ''}?name=${encodeURIComponent(this.username || '')}&password=${encodeURIComponent(this.password || '')}`)
+      let  response = await AxiosUtil.post<User>("users/login"+`?name=${encodeURIComponent(this.username || '')}&password=${encodeURIComponent(this.password || '')}`)
       if (response.status === 200) {
         // 登录成功
         this.userid = response.data.id?.toString()??""
-        console.log("111111111111111:"+this.userid);
+        this.userName = response.data.name??""
+        this.telePone = response.data.telePhone??""
+
         promptAction.showToast({ message: '登录成功' })
+
+        AppStorage.set(UserName,this.userName)
+        AppStorage.set(TelePone,this.telePone)
         AppStorage.set(ID,this.userid)
         // 跳转到主页面
         router.replaceUrl({

@@ -1,6 +1,8 @@
 import { MenuItem,menuArray } from "../../models/UserMenuItem"
-import { router } from '@kit.ArkUI'
-import { ID } from "../../pages/LoginPage"
+import {  router } from '@kit.ArkUI'
+import { ID, TelePone, UserName } from "../../pages/LoginPage"
+import { ClearCart } from "../../utils"
+import { SelectedAddress } from "../../pages/AddressPage"
 
 @Preview
 @Component
@@ -8,6 +10,9 @@ export struct UserMenu {
   @Consume navStack: NavPathStack
   @State menuItems: Array<MenuItem> = menuArray
   @StorageProp(ID) userid: string = "";
+  @StorageProp(SelectedAddress) selectedAddress:string = ""
+  @StorageProp(TelePone) telePone:string = ""
+  @StorageProp(UserName) userName:string = ""
   @Link isLogin:boolean
   @Builder
   menuItemBuilder(item: MenuItem, index: number) {
@@ -134,8 +139,16 @@ export struct UserMenu {
             //登出逻辑
             .onClick( () => {
               this.userid = "-1"
+              this.selectedAddress = "地址暂时为空"
+              this.telePone = ""
+              this.userName = ""
               this.isLogin = false
               AppStorage.set(ID,this.userid)
+              AppStorage.set(SelectedAddress,this.selectedAddress)
+              AppStorage.set(UserName,this.userName)
+              AppStorage.set(TelePone,this.telePone)
+              //
+              ClearCart()
             })
           }
         }

@@ -38,7 +38,7 @@ export  struct HomePage {
         }
         .height('100%')
         .width('100%')
-        .margin({top:100})
+        .margin({top:55})
         .scrollBar(BarState.Auto)
         .onReachEnd(()=>{
           this.UpRefresh()

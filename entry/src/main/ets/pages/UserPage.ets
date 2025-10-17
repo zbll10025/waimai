@@ -2,7 +2,7 @@ import { UserHeader } from '../component/UserPage/UserHeader'
 import { UserMenu } from '../component/UserPage/UserMenu'
 import { AboutPage } from '../component/UserPage/AboutPage'
 import { AccountSecurityPage } from "../component/UserPage/AccountSecurityPage"
-import { AddressPage } from "../component/UserPage/AddressPage"
+import { AddressPage } from "./AddressPage"
 import { ID } from './LoginPage'
 import { AxiosUtil } from '../utils/network/HttpUtils'
 

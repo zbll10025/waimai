@@ -1,16 +1,19 @@
+import { SelectedAddress } from "../../pages/AddressPage"
+
 @Component
 export  struct  Location_Search{
   @State swiperList:string[]=['水煮肉片','塔斯汀','桂林米粉','蜜雪冰城']
+  @StorageProp(SelectedAddress) selectedAddress:string =""
   @State isInputOnFocus:boolean = false
   build() {
       Column(){
         //定位
         Row(){
           Image($r('app.media.gps')).width(18).aspectRatio(1)
-          Text('桂林电子科技大学').fontSize(18)
+          Text(this.selectedAddress).fontSize(18)
         }
         .margin({top:10,left:15}).width('100%')
-        //搜索框
+        /*//搜索框
         Row(){
           Stack({alignContent:Alignment.End}){
             Swiper(){
@@ -43,10 +46,10 @@ export  struct  Location_Search{
 
           }
           Image($r('app.media.Scan')).width(40).aspectRatio(1).fillColor('#363636')
-        }.margin({top:10,left:15}).width('100%')
+        }.margin({top:10,left:15}).width('100%')*/
       }
       .width('100%')
-      .height(95)
+      .height(50)
       .backgroundColor('#FAE35A')
   }
   private  InputOnchange(){

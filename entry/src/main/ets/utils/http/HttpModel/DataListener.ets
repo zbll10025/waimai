@@ -32,7 +32,7 @@ export  class SuggestGoodsDataListener implements  IDataListener<Goods[]>{
     }
     onSuccess(result: Goods[]) {
       this.HomePage.suggestFoodList = result
-      promptAction.showToast({ message: JSON.stringify(result[0])});
+      //promptAction.showToast({ message: JSON.stringify(result[0])});
       setTimeout(()=>{
         this.HomePage.isRefreshing = false
         this.HomePage.isDownRefresh =false
@@ -54,7 +54,7 @@ export  class ShopListDataListener implements  IDataListener<Shop[]>{
     if(result.length<5){this.HomePage.isOverUpRefresh =true}
     this.HomePage.shopList = [...this.HomePage.shopList,...result]
     this.HomePage.shopOffer+=5
-    promptAction.showToast({ message: JSON.stringify(result[0])});
+    //promptAction.showToast({ message: JSON.stringify(result[0])});
     setTimeout(()=>{
       this.HomePage.isUpRefreshing = false
     },2000)

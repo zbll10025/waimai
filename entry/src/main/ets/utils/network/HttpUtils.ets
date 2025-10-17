@@ -1,4 +1,4 @@
-import axios,{InternalAxiosRequestConfig,AxiosError,AxiosResponse} from '@ohos/axios'
+import axios,{InternalAxiosRequestConfig,AxiosError,AxiosResponse, Type} from '@ohos/axios'
 
 //1.axios实例对象
 
@@ -18,14 +18,7 @@ axiosInstance.interceptors.request.use((config:InternalAxiosRequestConfig) => {
   return Promise.reject(error);
 });
 
-//定义后端标准返回格式的类型接口(根据需要可选)
-export interface HttpRes<T>{
-  code:number
-  message:string
-  data:T
-}
-//优化
-export type  ResType<T> =AxiosResponse<HttpRes<T>>
+export type  ResType<T> =AxiosResponse<T>
 
 //3.添加响应拦截器,统一处理响应数据和错误
 axiosInstance.interceptors.response.use((response:AxiosResponse)=> {

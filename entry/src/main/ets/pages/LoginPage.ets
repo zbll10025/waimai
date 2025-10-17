@@ -1,8 +1,16 @@
 import { router } from '@kit.ArkUI'
 import { promptAction } from '@kit.ArkUI'
-import http from '@ohos.net.http'
+import { AxiosUtil } from '../utils/network/HttpUtils'
+
+
 export const ID = 'userid'
 PersistentStorage.persistProp(ID,'-1')
+
+interface GeneratedObjectLiteralInterface_1 {
+  name: string;
+  password: string;
+}
+
 @Entry
 @Component
 export struct LoginPage {
@@ -193,33 +201,34 @@ export struct LoginPage {
       promptAction.showToast({ message: '请填写完整信息' })
       return
     }
-
+    console.log(`114514${this.baseUrl || ''}${this.loginEndpoint || ''}?name=${encodeURIComponent(this.username || '')}&password=${encodeURIComponent(this.password || '')}`);
     this.isLoading = true
 
     try {
-      const httpRequest = http.createHttp()
-      
-      // 构建请求URL，使用Query参数
-      const loginUrl = `${this.baseUrl}${this.loginEndpoint}?name=${encodeURIComponent(this.username)}&password=${encodeURIComponent(this.password)}`
-      
-      const response = await httpRequest.request(loginUrl, {
-        method: http.RequestMethod.POST,
-        header: {
-          'Content-Type': 'application/json'
-        }
-      })
 
-      console.info('Login response status:', response.responseCode)
-      console.info('Login response body:', response.result)
+      // const httpRequest = http.createHttp()
+      //
+      // // 构建请求URL，使用Query参数
+      // const loginUrl = `${this.baseUrl}${this.loginEndpoint}?name=${encodeURIComponent(this.username)}&password=${encodeURIComponent(this.password)}`
+      //
+      // const response = await httpRequest.request(loginUrl, {
+      //   method: http.RequestMethod.POST,
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
 
-      if (response.responseCode === 200) {
+      // console.info('Login response status:', response.responseCode)
+      // console.info('Login response body:', response.result)
+
+      let  response = await AxiosUtil.post<User>(`${this.baseUrl || ''}${this.loginEndpoint || ''}?name=${encodeURIComponent(this.username || '')}&password=${encodeURIComponent(this.password || '')}`)
+      console.log("zzzz"+JSON.stringify(response.status))
+      if (response.status === 200) {
         // 登录成功
-        this.userid =  JSON.parse(response.result as string).id
-        AppStorage.set(ID,this.userid)
-        console.info('Login response body:',  this.userid)
+        this.userid = response.data?.toString()??""
+        console.log("111111111111111"+this.userid);
         promptAction.showToast({ message: '登录成功' })
-
-
+        AppStorage.set(ID,this.userid)
         // 跳转到主页面
         router.replaceUrl({
           url: 'pages/MainPage'
@@ -249,7 +258,6 @@ export struct LoginPage {
   }
 
   private checkAutoLogin() {
-    console.info('Login response body:',  this.userid)
     if (this.userid === '-1') {
       console.info('default')
     } else {
@@ -263,4 +271,14 @@ export struct LoginPage {
 
 
 }
-
+class b{
+  name?:string
+  password: string = ''
+}
+class User {
+  id?:number
+  name: string = ''
+  password: string = ''
+  telePhone: string = ''
+  balance?:number
+}

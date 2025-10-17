@@ -5,8 +5,11 @@ import { HomePage } from "../../../pages/HomePage";
 import { Shop } from "../../../models/Shop";
 import { Category } from "../../../models/Category";
 import { RouterPath } from "../../../route/RoutePath";
-import { AddCart, GlobalStore } from "../..";
+import { AddCart, ClearCart, GlobalStore } from "../..";
 import { ShopPage } from "../../../pages/ShopPage";
+import { Order } from "../../../models/Order";
+import { OrderListPage } from "../../../pages/OrderListPage";
+import { Bill } from "../../../models/Bill";
 
 export  class SuggestGoodsDataListener implements  IDataListener<Goods[]>{
     private HomePage: HomePage;
@@ -74,3 +77,54 @@ export  class CategoryListDataListener implements  IDataListener<Category[]>{
 
   }
 }
+export  class BillGetDataListener implements  IDataListener<Order[]>{
+
+  orderListPage:OrderListPage
+  constructor(orderListPage:OrderListPage) {
+    this.orderListPage = orderListPage
+  }
+  onSuccess(result: Order[]) {
+    this.orderListPage.orders = result
+    promptAction.showToast({ message: "刷新成功"});
+    setTimeout(()=>{
+      this.orderListPage.isRefreshing = false
+      this.orderListPage.isDownRefresh =false
+    },500)
+    //promptAction.showToast({ message: JSON.stringify(result[0])});
+  }
+  onFailure() {
+    promptAction.showToast({ message: "失败了"});
+    setTimeout(()=>{
+      this.orderListPage.isRefreshing = false
+      this.orderListPage.isDownRefresh =false
+    },500)
+
+  }
+}
+export  class BillPostListener implements  IDataListener<string>{
+
+  onSuccess(result: string): void {
+    promptAction.showToast({ message: "提交成功"+result});
+    setTimeout(()=>{
+      ClearCart()
+      router.pushUrl({url:RouterPath.MainPage})
+    },1000)
+  }
+  onFailure(): void {
+    promptAction.showToast({ message: "提交失败"});
+  }
+}
+
+export  class BillStateListener implements  IDataListener<string>{
+
+  onSuccess(result: string): void {
+    promptAction.showToast({ message: result});
+    setTimeout(()=>{
+
+    },1000)
+  }
+  onFailure(): void {
+    promptAction.showToast({ message: "订单状态改变成功"});
+  }
+}
+

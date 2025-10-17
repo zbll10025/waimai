@@ -13,7 +13,7 @@ export class HttpTask {
     this.httpRequest.setUrl(url);
     this.httpRequest.setListener(httpListener);
 
-    if (!requestData) {
+    if (requestData) {
       this.httpRequest.setParam(requestData);
     }
   }

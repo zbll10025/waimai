@@ -12,7 +12,7 @@ export const menuArray: Array<MenuItem> = [
     title: '收货地址',
     subtitle: '管理收货地址',
     showArrow: true,
-    name:"AboutPage"
+    name:"AddressPage"
   },
   {
     icon: $r('app.media.address'),

@@ -3,12 +3,15 @@ import { UserMenu } from '../component/UserPage/UserMenu'
 import { AboutPage } from '../component/UserPage/AboutPage'
 import { AccountSecurityPage } from "../component/UserPage/AccountSecurityPage"
 import { AddressPage } from "../component/UserPage/AddressPage"
+import { ID } from './LoginPage'
+import { AxiosUtil } from '../utils/network/HttpUtils'
+
 @Preview
 @Component
 export struct UserPage {
-  @State isRefreshing: boolean = false
   @Provide navStack: NavPathStack = new NavPathStack()
-
+  @State isLogin : boolean = false
+  @StorageProp(ID) userid: string = '';
   @Builder
   PageMap(name: string) {
     if (name === 'AboutPage') {
@@ -20,43 +23,35 @@ export struct UserPage {
       AddressPage()
     }
   }
+
   build() {
     Navigation(this.navStack) {
-      Refresh({ refreshing: $$this.isRefreshing, offset: 30, friction: 70 }) {
-        Scroll() {
-          Column() {
-            // 用户头部信息
-            UserHeader()
+      Column() {
+        // 用户头部信息
+        UserHeader({ isLogin: this.isLogin })
 
-            // 用户功能菜单
-            UserMenu()
-          }
-          .width('100%')
-          .backgroundColor('#F5F5F5')
-        }
-        .width('100%')
-        .height('100%')
-        .scrollBar(BarState.Auto)
+        // 用户功能菜单
+        UserMenu({ isLogin: this.isLogin })
       }
-      .onStateChange((refreshStatus: RefreshStatus) => {
-        if (refreshStatus == RefreshStatus.Refresh) {
-          // 刷新用户数据
-          this.refreshUserData()
-        }
-      })
-      .onRefreshing(() => {
-        this.refreshUserData()
-      })
+      .width('100%')
+      .backgroundColor('#F5F5F5')
     }
     .navDestination(this.PageMap)
     .mode(NavigationMode.Stack)
     .hideTitleBar(true)
   }
 
+  aboutToAppear() {
+    // 页面加载时检查是否已经登录
+    this.checkAutoLogin()
+  }
 
-  private refreshUserData() {
-    setTimeout(() => {
-      this.isRefreshing = false
-    }, 1000)
+  private checkAutoLogin()
+  {
+    if (this.userid !== '-1') {
+      this.isLogin = true
+    }else {
+      this.isLogin = false
+    }
   }
 }

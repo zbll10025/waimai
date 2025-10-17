@@ -1,14 +1,14 @@
 import { MenuItem,menuArray } from "../../models/UserMenuItem"
-import  ConnectionUtils from "../../utils/network/ConnectionUtils"
-import { AnimatedDrawableDescriptor, promptAction } from '@kit.ArkUI';
-import { AxiosUtil } from "../../utils/network/HttpUtils.ets"
+import { router } from '@kit.ArkUI'
+import { ID } from "../../pages/LoginPage"
+
 @Preview
 @Component
 export struct UserMenu {
   @Consume navStack: NavPathStack
   @State menuItems: Array<MenuItem> = menuArray
-
-  @State inf: dizhi[] = [] //Inf接口自己定义
+  @StorageProp(ID) userid: string = "";
+  @Link isLogin:boolean
   @Builder
   menuItemBuilder(item: MenuItem, index: number) {
     Row() {
@@ -33,25 +33,33 @@ export struct UserMenu {
             .alignSelf(ItemAlign.Start)
         }
       }
+
       .alignItems(HorizontalAlign.Start)
       .layoutWeight(1)
 
       // 显示
-      if (item.showArrow) {
-        Image($r('app.media.chevron_right'))
-          .width(25)
-          .height(25)
-          .fillColor('#CCCCCC')
 
-      }
+      Image($r('app.media.chevron_right'))
+        .width(25)
+        .height(25)
+        .fillColor('#CCCCCC')
+
     }
     .width('100%')
     .height(100)
     .padding({ left: 16, right: 16 })
+    .margin({ top: 5})
     .alignItems(VerticalAlign.Center)
     .backgroundColor('transparent')
     .onClick(() => {
-      this.navStack.replacePath({name:item.name})
+      if(this.isLogin || item.name == "AboutPage"){
+        this.navStack.replacePath({name:item.name})
+      }
+      else {
+        router.replaceUrl({
+          url: 'pages/LoginPage'
+        })
+      }
     })
   }
 
@@ -105,7 +113,6 @@ export struct UserMenu {
               .fontWeight(600)
               .fontColor('#333333')
               .margin({ top: 10, bottom: 12 })
-
             ForEach(this.menuItems, (item: MenuItem, index) => {
               this.menuItemBuilder(item, index)
             })
@@ -113,8 +120,8 @@ export struct UserMenu {
           .backgroundColor('#FFFFFF')
           .borderRadius(12)
           .padding({ bottom: 12 })
-          .margin({ left: 16, right: 16, bottom: 12 })
-
+          .margin({ left: 16, right: 16, bottom: 25 })
+          if(this.isLogin){
           Button('退出登录')
             .width('90%')
             .height(50)
@@ -125,42 +132,13 @@ export struct UserMenu {
             .border({ width: 1, color: '#FF4444' })
             .borderRadius(25)
             //登出逻辑
-            .onClick(async () => {
-              // let httpUtil: HttpUtils = new HttpUtils();
-              // await httpUtil.getHttpRequest<dizhi[]>("/api/addresses").then((value: dizhi[]) => {
-              //   promptAction.showToast({
-              //     message: value[2].aid?.toString()
-              //   });
-              // });
-              //
-              try {
-                let res = await AxiosUtil.get<dizhi[]>("http://192.168.0.182:8080/api/addresses")
-                promptAction.showToast({
-                      message: res.data[1].address
-                    });
-                console.log(res.data[1]);
-              } catch (e) {
-                console.log(e, "失败")
-
-              }
-              // const res = await AxiosUtil.get<dizhi>("/addresses")
-              // promptAction.showToast({
-              //   message: res.data.data as string
-              // })
+            .onClick( () => {
+              this.userid = "-1"
+              this.isLogin = false
+              AppStorage.set(ID,this.userid)
             })
+          }
         }
         .margin({ bottom: 30 })
   }
-}
-class dizhi{
-  aid?:number
-  address?:string
-  uid?:number
-}
-class User{
-  id?:number
-  name?:string
-  password?:string
-  telePhone?:string
-  balance?:number
 }

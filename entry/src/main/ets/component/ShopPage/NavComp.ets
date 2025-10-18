@@ -3,6 +3,7 @@ import { ShowGoodsComp } from './ShowGoodsComp'
 
 @Component
 export struct  NavComp{
+  @Prop shopName:string
   @Builder
   navItemBuild(isSelected:boolean,title:string,subTitle?:string){
     Column(){
@@ -33,7 +34,7 @@ export struct  NavComp{
         Text('好友拼单').fontColor('#FF8000').fontSize(14).fontWeight(600)
       }.width(68).height(26).borderRadius(8).border({width:0.5,color:'#FF8000'})
        .padding(5).margin({bottom:12})*/
-      Text("商店名称").fontSize(25).fontColor('#FF8000').fontWeight(600).margin({left:100})
+      Text(this.shopName).fontSize(25).fontColor('#FF8000').fontWeight(600).margin({left:100})
     }
     .width('100%')
     .height(60)

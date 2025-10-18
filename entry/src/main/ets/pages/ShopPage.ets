@@ -8,6 +8,10 @@ import { JSON } from '@kit.ArkTS';
 import { GlobalStore } from '../utils/index';
 import { promptAction, router } from '@kit.ArkUI'
 import { Category } from '../models/Category';
+import { HttpFrame } from '../utils/http/HttpFrame';
+import { Shop } from '../models/Shop';
+import { Ip, ShopDataHttp } from '../utils/http';
+import { ShopDataListener } from '../utils/http/HttpModel/DataListener';
 
 PersistentStorage.persistProp(CARTKEY,'[]')
 @Entry
@@ -17,6 +21,7 @@ export  struct ShopPage {
   @State showCart:boolean = false
   @State categoryList:Category[] =[]
   @State categoryIndex:number = 0
+  @State shopName:string = "暂无商店名称"
   @StorageProp(CARTKEY)
   @Watch('onChangeCart')
   cartItemListJson:string  = '[]'
@@ -34,6 +39,9 @@ export  struct ShopPage {
   }
   aboutToAppear(): void {
     this.ParseParams()
+    if(this.categoryList.length!=0){
+      HttpFrame.sendReq<Shop>(Ip+ShopDataHttp+this.categoryList[0].cid?.toString(),new ShopDataListener(this))
+    }
   }
   private ClickSugeest(){
     this.showCart = true
@@ -50,7 +58,7 @@ export  struct ShopPage {
         Column(){
           Stack({alignContent:Alignment.Top}){
             ShowGoodsComp({categoryList:this.categoryList,menuSelectedIndex:this.categoryIndex})
-            NavComp()
+            NavComp({shopName:this.shopName})
           }
         }
         .height('100%')

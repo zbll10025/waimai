@@ -128,7 +128,6 @@ export  class BillPostListener implements  IDataListener<string>{
     promptAction.showToast({ message: "提交失败"});
   }
 }
-
 export  class BillStateListener implements  IDataListener<string>{
 
   onSuccess(result: string): void {
@@ -141,4 +140,18 @@ export  class BillStateListener implements  IDataListener<string>{
     promptAction.showToast({ message: "订单状态改变成功"});
   }
 }
+export  class ShopDataListener implements  IDataListener<Shop>{
+  shopPage:ShopPage
+  constructor(shopPage:ShopPage) {
+    this.shopPage = shopPage
+  }
+  onSuccess(result: Shop): void {
+    this.shopPage.shopName = result.sname
+    //promptAction.showToast({ message: result});
+  }
+  onFailure(): void {
+    promptAction.showToast({ message: "商店信息获取失败"});
+  }
+}
+
 

@@ -3,7 +3,7 @@ import { promptAction } from '@kit.ArkUI'
 import http from '@ohos.net.http'
 import { Ip } from '../utils/http';
 
-interface Uer {
+interface User {
   name: string;
   password: string;
   telePhone: string;
@@ -189,14 +189,14 @@ export struct RegisterPage {
 
       // 使用 JSON 请求体提交注册信息
       const registerUrl = Ip
-      const user: Uer = {
+      const user: User = {
         name: this.name,
         password: this.password,
         telePhone: this.telePhone
       }
 
 
-      const response = await httpRequest.request(registerUrl, {
+      const response = await httpRequest.request(registerUrl+'/api/users', {
         method: http.RequestMethod.POST,
         header: {
           'Content-Type': 'application/json'

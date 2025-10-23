@@ -15,7 +15,6 @@ PersistentStorage.persistProp(TelePone,'')
 export struct LoginPage {
   @State username: string = ''
   @State password: string = ''
-  @State isPasswordVisible: boolean = false
   @State isLoading: boolean = false
   @StorageProp(ID) userid: string = ""
   @StorageProp(UserName) userName: string = '用户昵称'
@@ -28,8 +27,6 @@ export struct LoginPage {
 
   build() {
     Column() {
-
-      // Logo and title section
       Column() {
         Image($r('app.media.address'))
           .width(80)
@@ -48,10 +45,8 @@ export struct LoginPage {
       }
       .margin({ top: 60, bottom: 60 })
 
-      // Login form
       Column() {
-        // Username/Phone input
-        TextInput({ placeholder: '请输入手机号/用户名' })
+        TextInput({ placeholder: '请输入用户名' })
           .width('100%')
           .height(50)
           .backgroundColor('#F5F5F5')
@@ -74,17 +69,11 @@ export struct LoginPage {
             .borderRadius(25)
             .padding({ left: 20, right: 20 })
             .fontSize(16)
+            .type(InputType.Password)
             .onChange((value: string) => {
               this.password = value
             })
 
-          Image($r('app.media.chevron_up'))
-            .width(20)
-            .height(20)
-            .margin({ right: 15 })
-            .onClick(() => {
-              this.isPasswordVisible = !this.isPasswordVisible
-            })
         }
         .width('100%')
         .backgroundColor('#F5F5F5')
@@ -106,17 +95,8 @@ export struct LoginPage {
           })
           .margin({ bottom: 20 })
 
-        // Forgot password and register
         Row() {
-          Text('忘记密码?')
-            .fontSize(14)
-            .fontColor('#FF6B35')
-            .onClick(() => {
-              this.handleForgotPassword()
-            })
-
           Blank()
-
           Text('注册账号')
             .fontSize(14)
             .fontColor('#FF6B35')
@@ -127,7 +107,6 @@ export struct LoginPage {
         .width('100%')
         .margin({ bottom: 40 })
 
-        // Third-party login options
         Column() {
           Text('其他登录方式')
             .fontSize(14)
@@ -253,10 +232,6 @@ export struct LoginPage {
   }
 
 
-}
-class b{
-  name?:string
-  password: string = ''
 }
 class User {
   id?:number

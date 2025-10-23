@@ -16,13 +16,10 @@ export struct RegisterPage {
   @State name: string = ''
   @State password: string = ''
   @State confirmPassword: string = ''
-  @State isPasswordVisible: boolean = false
-  @State isConfirmPasswordVisible: boolean = false
   @State isLoading: boolean = false
 
   build() {
     Column() {
-      // Logo & title
       Column() {
         Image($r('app.media.address'))
           .width(80)
@@ -41,9 +38,7 @@ export struct RegisterPage {
       }
       .margin({ top: 60, bottom: 60 })
 
-      // Form (aligned with LoginPage style)
       Column() {
-        // Phone
         TextInput({ placeholder: '请输入手机号' })
           .width('100%')
           .height(50)
@@ -78,17 +73,9 @@ export struct RegisterPage {
             .borderRadius(25)
             .padding({ left: 20, right: 20 })
             .fontSize(16)
-            .type(this.isPasswordVisible ? InputType.Normal : InputType.Password)
+            .type(InputType.Password)
             .onChange((value: string) => {
               this.password = value
-            })
-
-          Image($r('app.media.chevron_up'))
-            .width(20)
-            .height(20)
-            .margin({ right: 15 })
-            .onClick(() => {
-              this.isPasswordVisible = !this.isPasswordVisible
             })
         }
         .width('100%')
@@ -105,17 +92,9 @@ export struct RegisterPage {
             .borderRadius(25)
             .padding({ left: 20, right: 20 })
             .fontSize(16)
-            .type(this.isConfirmPasswordVisible ? InputType.Normal : InputType.Password)
+            .type(InputType.Password)
             .onChange((value: string) => {
               this.confirmPassword = value
-            })
-
-          Image($r('app.media.chevron_up'))
-            .width(20)
-            .height(20)
-            .margin({ right: 15 })
-            .onClick(() => {
-              this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible
             })
         }
         .width('100%')
@@ -138,7 +117,6 @@ export struct RegisterPage {
           })
           .margin({ bottom: 20 })
 
-        // Back to login
         Row() {
           Text('已有账号？')
             .fontSize(14)
@@ -164,7 +142,7 @@ export struct RegisterPage {
   }
 
   private canRegister(): boolean {
-    return this.telePhone.trim().length > 0 &&
+    return /^\d{11}$/.test(this.telePhone.trim()) &&
            this.name.trim().length > 0 &&
            this.password.trim().length >= 6 &&
            this.confirmPassword.trim().length >= 6 &&
@@ -172,6 +150,11 @@ export struct RegisterPage {
   }
 
   private async handleRegister() {
+    // 手机号需为11位纯数字
+    if (!/^\d{11}$/.test(this.telePhone.trim())) {
+      promptAction.showToast({ message: '请输入正确的手机号' })
+      return
+    }
     if (!this.canRegister()) {
       if (this.password !== this.confirmPassword) {
         promptAction.showToast({ message: '两次密码输入不一致' })
@@ -187,7 +170,6 @@ export struct RegisterPage {
     try {
       httpRequest = http.createHttp()
 
-      // 使用 JSON 请求体提交注册信息
       const registerUrl = Ip
       const user: User = {
         name: this.name,
@@ -203,9 +185,6 @@ export struct RegisterPage {
         },
         extraData: JSON.stringify(user)
       })
-
-      console.info('Register response status:', response.responseCode)
-      console.info('Register response body:', response.result)
 
       if (response.responseCode === 200) {
         promptAction.showToast({ message: '注册成功' })

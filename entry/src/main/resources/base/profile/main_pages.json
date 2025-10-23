@@ -7,7 +7,6 @@
     "pages/CheckoutPage",
     "pages/LoginPage",
     "pages/RegisterPage",
-    "pages/ForgetPassword",
     "pages/OrderListPage",
     "pages/AddressPage"
   ]
